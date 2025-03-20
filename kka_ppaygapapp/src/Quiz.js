@@ -128,13 +128,13 @@ function Quiz() {
     if (question.id === 1 && question.question_type === "slider_year") {
       return (
         <div className="slider-container">
-          <input 
-            type="range" 
-            min={question.data.min} 
-            max={question.data.max} 
-            defaultValue={question.data.min} 
-            onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })} 
-            disabled={showAnswer} 
+          <input
+            type="range"
+            min={question.data.min}
+            max={question.data.max}
+            defaultValue={question.data.min}
+            onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
+            disabled={showAnswer}
           />
           <span className="slider-value">{answers[question.id] || question.data.min}</span>
           <div className="slider-hint">
@@ -156,13 +156,13 @@ function Quiz() {
       case "slider_percent":
         return (
           <div className="slider-container">
-            <input 
-              type="range" 
-              min={question.data.min} 
-              max={question.data.max} 
-              defaultValue={question.data.min} 
-              onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })} 
-              disabled={showAnswer} 
+            <input
+              type="range"
+              min={question.data.min}
+              max={question.data.max}
+              defaultValue={question.data.min}
+              onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
+              disabled={showAnswer}
             />
             <span className="slider-value">{answers[question.id] || question.data.min}</span>
           </div>
@@ -173,9 +173,9 @@ function Quiz() {
             {question.data.pairs.map((pair, idx) => (
               <div key={idx} className="match-item">
                 <span className="match-job">{pair.job}</span>
-                <select 
-                  defaultValue="" 
-                  onChange={(e) => setAnswers({ ...answers, [question.id]: { ...answers[question.id], [pair.job]: e.target.value } })} 
+                <select
+                  defaultValue=""
+                  onChange={(e) => setAnswers({ ...answers, [question.id]: { ...answers[question.id], [pair.job]: e.target.value } })}
                   disabled={showAnswer}
                 >
                   <option value="" disabled>Select pay gap</option>
@@ -193,12 +193,12 @@ function Quiz() {
             <div className="ranking-label">Highest</div>
             <ul className="ranking-list">
               {rankingOrder.map((item, idx) => (
-                <li 
-                  key={idx} 
-                  draggable={!showAnswer} 
-                  onDragStart={(e) => onDragStart(e, idx)} 
-                  onDragOver={onDragOver} 
-                  onDrop={(e) => onDrop(e, idx)} 
+                <li
+                  key={idx}
+                  draggable={!showAnswer}
+                  onDragStart={(e) => onDragStart(e, idx)}
+                  onDragOver={onDragOver}
+                  onDrop={(e) => onDrop(e, idx)}
                   className="ranking-item"
                 >
                   {item}
@@ -261,7 +261,11 @@ function Quiz() {
       {showFinal ? (
         <div id="quiz-container" className="quiz-container start-screen">
           <h2>Your Final Score: {score} / {quizData.length}</h2>
+          
           <button className="action-btn" onClick={handleReplay}>Replay Quiz</button>
+          <p className="final-message">
+            Thank you for playing our quiz. If you'd like to learn more about the gender pay gap and how it affects all of us, please read more below.
+          </p>
         </div>
       ) : !quizStarted ? (
         <div id="quiz-container" className="quiz-container start-screen">

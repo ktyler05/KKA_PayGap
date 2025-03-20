@@ -21,13 +21,13 @@ body {
 .app-header {
     background: #ffffff;
     padding: 0.5rem 1rem;
-    border-radius: 10px;
+    border-radius: 60px;
     display: inline-block;
     margin: 1rem;
     text-align: left;
 }
 .app-header h1 {
-    color: #ac632f;
+    color: #a05621;
     font-size: 1 rem;
     margin: 0;
 }
@@ -54,14 +54,20 @@ body {
     text-align: center;
 }
 .start-screen h1 {
-    color: #d4a57f;
+    color: #b97c4b;
     font-size: 2rem;
     margin-bottom: 1rem;
 }
-h1, h2 {
+h1 {
     text-align: center;
     margin-bottom: 1rem;
-    color: #cd8e5a;
+    color: #9c6639;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #a16e44;
 }
 #timer {
     text-align: center;
@@ -136,7 +142,7 @@ h1, h2 {
     transition: border 0.3s ease;
 }
 .match-item select:focus {
-    border-color: #ddbea5;
+    border-color: #d49a6b;
 }
 .ranking-container {
     text-align: center;
@@ -221,8 +227,8 @@ footer {
   
   .app-nav {
     background: #ffffff;
-    padding: 1rem 2rem;
-    border-radius: 60px; /* This value makes it pill shaped */
+    padding: 1rem 3rem;
+    border-radius: 60px;
   }
   
   .app-nav ul {
@@ -238,4 +244,10 @@ footer {
     color: #ac632f;
     cursor: pointer;
   }
-  
+
+  .final-message {
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #583012;
+    text-align: center;
+  }
