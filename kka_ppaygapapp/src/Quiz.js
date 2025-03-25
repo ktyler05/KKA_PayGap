@@ -237,38 +237,47 @@ function Quiz() {
             </span>
           </div>
         );
-      case "matching":
-        return (
-          <div className="match-container">
-            {question.data.pairs.map((pair, idx) => (
-              <div key={idx} className="match-item">
-                <span className="match-job">{pair.job}</span>
-                <select
-                  defaultValue=""
-                  onChange={(e) =>
-                    setAnswers({
-                      ...answers,
-                      [question.id]: {
-                        ...answers[question.id],
-                        [pair.job]: e.target.value,
-                      },
-                    })
+      // In the `renderInteraction` function, within the "matching" case:
+case "matching":
+  return (
+    <>
+      <div className="match-container">
+        {question.data.pairs.map((pair, idx) => (
+          <div key={idx} className="match-item">
+            <span className="match-job">{pair.job}</span>
+            <select
+              defaultValue=""
+              onChange={(e) =>
+                setAnswers({
+                  ...answers,
+                  [question.id]: {
+                    ...answers[question.id],
+                    [pair.job]: e.target.value
                   }
-                  disabled={showAnswer}
-                >
-                  <option value="" disabled>
-                    Select pay gap
-                  </option>
-                  {question.data.options.map((option, i) => (
-                    <option key={i} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
+                })
+              }
+              disabled={showAnswer}
+            >
+              <option value="" disabled>
+                Select pay gap
+              </option>
+              {question.data.options.map((option, i) => (
+                <option key={i} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </div>
-        );
+        ))}
+      </div>
+      <p className="matching-info">
+        In the context of the gender pay gap, a higher positive percentage (+)
+        indicates women are paid less than men, while a negative percentage (–)
+        indicates men are paid less than women.
+      </p>
+    </>
+  );
+
       case "ranking":
         return (
           <div
