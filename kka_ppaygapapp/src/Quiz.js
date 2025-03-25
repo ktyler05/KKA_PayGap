@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './style.css';
 
 const quizData = [
@@ -23,39 +23,10 @@ function Quiz() {
   const [showFinal, setShowFinal] = useState(false);
   const currentQ = quizData[currentQuestion];
 
-  useEffect(() => {
-    if (!quizStarted) return;
-    setTimer(60);
-    timerRef.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          alert("Time is up!");
-          handleShowAnswer();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [currentQuestion, quizStarted]);
-
-  useEffect(() => {
-    if (!quizStarted) return;
-    setShowAnswer(false);
-    setCurrentIsCorrect(null);
-    if (currentQ.question_type === "ranking") {
-      const shuffled = [...currentQ.data.correct_order].sort(() => Math.random() - 0.5);
-      setRankingOrder(shuffled);
-    }
-  }, [currentQ, quizStarted]);
-
-  const handleStartQuiz = () => {
-    setQuizStarted(true);
-  };
-
-  const handleShowAnswer = () => {
+  // Wrapped in useCallback to keep the function reference stable
+  const handleShowAnswer = useCallback(() => {
     clearInterval(timerRef.current);
+    const currentQ = quizData[currentQuestion];
     let isCorrect = false;
     if (currentQ.question_type === "ranking") {
       const currentUserOrder = rankingOrder;
@@ -84,6 +55,37 @@ function Quiz() {
     }
     setCurrentIsCorrect(isCorrect);
     setShowAnswer(true);
+  }, [currentQuestion, rankingOrder, answers, scored]);
+
+  useEffect(() => {
+    if (!quizStarted) return;
+    setTimer(60);
+    timerRef.current = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current);
+          alert("Time is up!");
+          handleShowAnswer();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [currentQuestion, quizStarted, handleShowAnswer]);
+
+  useEffect(() => {
+    if (!quizStarted) return;
+    setShowAnswer(false);
+    setCurrentIsCorrect(null);
+    if (currentQ.question_type === "ranking") {
+      const shuffled = [...currentQ.data.correct_order].sort(() => Math.random() - 0.5);
+      setRankingOrder(shuffled);
+    }
+  }, [currentQ, quizStarted]);
+
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
   };
 
   const handleNext = () => {
@@ -261,7 +263,6 @@ function Quiz() {
       {showFinal ? (
         <div id="quiz-container" className="quiz-container start-screen">
           <h2>Your Final Score: {score} / {quizData.length}</h2>
-          
           <button className="action-btn" onClick={handleReplay}>Replay Quiz</button>
           <p className="final-message">
             Thank you for playing our quiz. If you'd like to learn more about the gender pay gap and how it affects all of us, please read more below.
