@@ -1,18 +1,63 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import './style.css';
 
 const quizData = [
-  { id: 1, question_type: "slider_year", data: { prompt: "In what year did the UK introduce the Equal Pay Act?", min: 1960, max: 1990, correct_answer: 1970 } },
-  { id: 2, question_type: "matching", data: { prompt: "Match these jobs to their average gender pay gap:", pairs: [ { job: "Floorers & Wall Tilers", correct: "39%" }, { job: "Train & Tram Drivers", correct: "-11%" }, { job: "Exam Invigilators", correct: "0%" }, { job: "Doctors", correct: "10%" } ], options: ["39%", "-11%", "0%", "10%"] } },
-  { id: 3, question_type: "slider_pence", data: { prompt: "On average, how much does a woman earn for every £1 a man earns?", min: 70, max: 100, correct_answer: 93 } },
-  { id: 4, question_type: "ranking", data: { prompt: "Rank these from largest pay gap to smallest:", correct_order: ["England", "Wales", "Scotland", "Northern Ireland"] } },
-  { id: 5, question_type: "slider_percent", data: { prompt: "What is the average percentage pay difference between mothers and fathers?", min: 0, max: 30, correct_answer: 24 } }
+  {
+    id: 1,
+    question_type: "slider_year",
+    data: {
+      prompt: "In what year did the UK introduce the Equal Pay Act?",
+      min: 1960,
+      max: 1990,
+      correct_answer: 1970
+    }
+  },
+  {
+    id: 2,
+    question_type: "matching",
+    data: {
+      prompt: "Match these jobs to their average gender pay gap:",
+      pairs: [
+        { job: "Floorers & Wall Tilers", correct: "39%" },
+        { job: "Train & Tram Drivers", correct: "-11%" },
+        { job: "Exam Invigilators", correct: "0%" },
+        { job: "Doctors", correct: "10%" }
+      ],
+      options: ["39%", "-11%", "0%", "10%"]
+    }
+  },
+  {
+    id: 3,
+    question_type: "slider_pence",
+    data: {
+      prompt: "On average, how much does a woman earn for every £1 a man earns?",
+      min: 70,
+      max: 100,
+      correct_answer: 93
+    }
+  },
+  {
+    id: 4,
+    question_type: "ranking",
+    data: {
+      prompt: "Rank these from largest pay gap to smallest:",
+      correct_order: ["England", "Wales", "Scotland", "Northern Ireland"]
+    }
+  },
+  {
+    id: 5,
+    question_type: "slider_percent",
+    data: {
+      prompt: "What is the average percentage pay difference between mothers and fathers?",
+      min: 0,
+      max: 30,
+      correct_answer: 24
+    }
+  }
 ];
 
 function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
-  const [timer, setTimer] = useState(60);
-  const timerRef = useRef(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [scored, setScored] = useState({});
@@ -23,11 +68,13 @@ function Quiz() {
   const [showFinal, setShowFinal] = useState(false);
   const currentQ = quizData[currentQuestion];
 
-  // Wrapped in useCallback to keep the function reference stable
-  const handleShowAnswer = useCallback(() => {
-    clearInterval(timerRef.current);
-    const currentQ = quizData[currentQuestion];
+  const handleStartQuiz = () => {
+    setQuizStarted(true);
+  };
+
+  const handleShowAnswer = () => {
     let isCorrect = false;
+
     if (currentQ.question_type === "ranking") {
       const currentUserOrder = rankingOrder;
       const correctOrder = currentQ.data.correct_order;
@@ -35,7 +82,11 @@ function Quiz() {
       setAnswers(prev => ({ ...prev, [currentQ.id]: currentUserOrder }));
     } else {
       const userAnswer = answers[currentQ.id];
-      if (currentQ.question_type === "slider_year" || currentQ.question_type === "slider_pence" || currentQ.question_type === "slider_percent") {
+      if (
+        currentQ.question_type === "slider_year" ||
+        currentQ.question_type === "slider_pence" ||
+        currentQ.question_type === "slider_percent"
+      ) {
         isCorrect = Number(userAnswer) === currentQ.data.correct_answer;
       } else if (currentQ.question_type === "matching") {
         let allCorrect = true;
@@ -47,6 +98,7 @@ function Quiz() {
         isCorrect = allCorrect;
       }
     }
+
     if (!scored[currentQ.id]) {
       if (isCorrect) {
         setScore(prev => prev + 1);
@@ -55,37 +107,6 @@ function Quiz() {
     }
     setCurrentIsCorrect(isCorrect);
     setShowAnswer(true);
-  }, [currentQuestion, rankingOrder, answers, scored]);
-
-  useEffect(() => {
-    if (!quizStarted) return;
-    setTimer(60);
-    timerRef.current = setInterval(() => {
-      setTimer(prev => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          alert("Time is up!");
-          handleShowAnswer();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [currentQuestion, quizStarted, handleShowAnswer]);
-
-  useEffect(() => {
-    if (!quizStarted) return;
-    setShowAnswer(false);
-    setCurrentIsCorrect(null);
-    if (currentQ.question_type === "ranking") {
-      const shuffled = [...currentQ.data.correct_order].sort(() => Math.random() - 0.5);
-      setRankingOrder(shuffled);
-    }
-  }, [currentQ, quizStarted]);
-
-  const handleStartQuiz = () => {
-    setQuizStarted(true);
   };
 
   const handleNext = () => {
@@ -141,11 +162,19 @@ function Quiz() {
           <span className="slider-value">{answers[question.id] || question.data.min}</span>
           <div className="slider-hint">
             <div className="key-item">
-              <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/500px-Flag_of_France.svg.png" alt="France Flag" className="flag-image" />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/500px-Flag_of_France.svg.png"
+                alt="France Flag"
+                className="flag-image"
+              />
               <span>France introduced their equal pay act in 1972</span>
             </div>
             <div className="key-item">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Flag_of_the_United_States_%28Pantone%29.svg/383px-Flag_of_the_United_States_%28Pantone%29.svg.png" alt="US Flag" className="flag-image" />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Flag_of_the_United_States_%28Pantone%29.svg/383px-Flag_of_the_United_States_%28Pantone%29.svg.png"
+                alt="US Flag"
+                className="flag-image"
+              />
               <span>US introduced their equal pay act in 1963</span>
             </div>
           </div>
@@ -177,7 +206,15 @@ function Quiz() {
                 <span className="match-job">{pair.job}</span>
                 <select
                   defaultValue=""
-                  onChange={(e) => setAnswers({ ...answers, [question.id]: { ...answers[question.id], [pair.job]: e.target.value } })}
+                  onChange={(e) =>
+                    setAnswers({
+                      ...answers,
+                      [question.id]: {
+                        ...answers[question.id],
+                        [pair.job]: e.target.value
+                      }
+                    })
+                  }
                   disabled={showAnswer}
                 >
                   <option value="" disabled>Select pay gap</option>
@@ -225,7 +262,13 @@ function Quiz() {
           <div className={`answer-feedback ${feedbackClass}`}>
             <p>Your Answer: {answers[question.id]}</p>
             <p>Correct Answer: {question.data.correct_answer}</p>
-            <p>{currentIsCorrect ? <span className="correct-badge">Correct</span> : <span className="incorrect-badge">Incorrect</span>}</p>
+            <p>
+              {currentIsCorrect ? (
+                <span className="correct-badge">Correct</span>
+              ) : (
+                <span className="incorrect-badge">Incorrect</span>
+              )}
+            </p>
           </div>
         );
       case "matching":
@@ -238,7 +281,12 @@ function Quiz() {
                 const isCorrect = userOpt === pair.correct;
                 return (
                   <li key={idx}>
-                    {pair.job}: Your Answer: {userOpt} | Correct: {pair.correct} {isCorrect ? <span className="correct-badge">✓</span> : <span className="incorrect-badge">✗</span>}
+                    {pair.job}: Your Answer: {userOpt} | Correct: {pair.correct}{" "}
+                    {isCorrect ? (
+                      <span className="correct-badge">✓</span>
+                    ) : (
+                      <span className="incorrect-badge">✗</span>
+                    )}
                   </li>
                 );
               })}
@@ -250,7 +298,13 @@ function Quiz() {
           <div className={`answer-feedback ${feedbackClass}`}>
             <p>Your Order: {rankingOrder.join(" > ")}</p>
             <p>Correct Order: {question.data.correct_order.join(" > ")}</p>
-            <p>{currentIsCorrect ? <span className="correct-badge">Correct</span> : <span className="incorrect-badge">Incorrect</span>}</p>
+            <p>
+              {currentIsCorrect ? (
+                <span className="correct-badge">Correct</span>
+              ) : (
+                <span className="incorrect-badge">Incorrect</span>
+              )}
+            </p>
           </div>
         );
       default:
@@ -262,31 +316,44 @@ function Quiz() {
     <div className="wrapper">
       {showFinal ? (
         <div id="quiz-container" className="quiz-container start-screen">
-          <h2>Your Final Score: {score} / {quizData.length}</h2>
-          <button className="action-btn" onClick={handleReplay}>Replay Quiz</button>
+          <h2>
+            Your Final Score: {score} / {quizData.length}
+          </h2>
+          <button className="action-btn" onClick={handleReplay}>
+            Replay Quiz
+          </button>
           <p className="final-message">
-            Thank you for playing our quiz. If you'd like to learn more about the gender pay gap and how it affects all of us, please read more below.
+            Thank you for playing our quiz. If you'd like to learn more about the
+            gender pay gap and how it affects all of us, please read more below.
           </p>
         </div>
       ) : !quizStarted ? (
         <div id="quiz-container" className="quiz-container start-screen">
           <h1>Welcome to the Gender Pay Gap Quiz</h1>
-          <button className="action-btn" onClick={handleStartQuiz}>Play Quiz</button>
+          <button className="action-btn" onClick={handleStartQuiz}>
+            Play Quiz
+          </button>
         </div>
       ) : (
         <div id="quiz-container" className="quiz-container">
-          <div id="timer">Time: <span id="timer-display">{timer}</span> s</div>
+          {/* Removed the timer section completely */}
           <div className="quiz-step active">
             <h2>Question {currentQuestion + 1}</h2>
             <p className="question-prompt">{currentQ.data.prompt}</p>
-            <div className="interaction-area">{renderInteraction(currentQ)}</div>
+            <div className="interaction-area">
+              {renderInteraction(currentQ)}
+            </div>
             {showAnswer && renderAnswerFeedback(currentQ)}
           </div>
           <div className="button-group">
             {!showAnswer ? (
-              <button className="action-btn" onClick={handleShowAnswer}>Show Answer</button>
+              <button className="action-btn" onClick={handleShowAnswer}>
+                Show Answer
+              </button>
             ) : (
-              <button className="action-btn" onClick={handleNext}>{currentQuestion < quizData.length - 1 ? "Next Question" : "Finish Quiz"}</button>
+              <button className="action-btn" onClick={handleNext}>
+              {currentQuestion < quizData.length - 1 ? "Next Question" : "Finish Quiz"}
+              </button>
             )}
           </div>
           <div className="score-display">Score: {score}</div>
