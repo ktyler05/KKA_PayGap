@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './style.css';
 
 const quizData = [
@@ -40,8 +40,9 @@ const quizData = [
     id: 4,
     question_type: "ranking",
     data: {
-      prompt: "Rank these from largest pay gap to smallest:",
-      correct_order: ["England", "Wales", "Scotland", "Northern Ireland"]
+      prompt: "Rank these from smallest pay gap to largest:",
+      // Reversed order to reflect smallest → largest
+      correct_order: ["Northern Ireland", "Scotland", "Wales", "England"]
     }
   },
   {
@@ -68,18 +69,21 @@ function Quiz() {
   const [showFinal, setShowFinal] = useState(false);
   const currentQ = quizData[currentQuestion];
 
+  // For pointer-based drag on the ranking question:
+  const [draggingIndex, setDraggingIndex] = useState(null);
+
+  // Start the quiz
   const handleStartQuiz = () => {
     setQuizStarted(true);
   };
 
+  // Show the answer
   const handleShowAnswer = () => {
     let isCorrect = false;
-
     if (currentQ.question_type === "ranking") {
-      const currentUserOrder = rankingOrder;
       const correctOrder = currentQ.data.correct_order;
-      isCorrect = currentUserOrder.every((item, idx) => item === correctOrder[idx]);
-      setAnswers(prev => ({ ...prev, [currentQ.id]: currentUserOrder }));
+      isCorrect = rankingOrder.every((item, idx) => item === correctOrder[idx]);
+      setAnswers(prev => ({ ...prev, [currentQ.id]: rankingOrder }));
     } else {
       const userAnswer = answers[currentQ.id];
       if (
@@ -98,7 +102,6 @@ function Quiz() {
         isCorrect = allCorrect;
       }
     }
-
     if (!scored[currentQ.id]) {
       if (isCorrect) {
         setScore(prev => prev + 1);
@@ -109,6 +112,7 @@ function Quiz() {
     setShowAnswer(true);
   };
 
+  // Next question or finish
   const handleNext = () => {
     setShowAnswer(false);
     if (currentQuestion < quizData.length - 1) {
@@ -118,6 +122,7 @@ function Quiz() {
     }
   };
 
+  // Replay the quiz
   const handleReplay = () => {
     setQuizStarted(false);
     setCurrentQuestion(0);
@@ -130,23 +135,53 @@ function Quiz() {
     setShowFinal(false);
   };
 
-  const onDragStart = (e, index) => {
-    e.dataTransfer.setData("dragIndex", index);
+  // If this question is ranking, shuffle the correct_order to start
+  useEffect(() => {
+    if (!quizStarted) return;
+    setShowAnswer(false);
+    setCurrentIsCorrect(null);
+    if (currentQ.question_type === "ranking") {
+      const shuffled = [...currentQ.data.correct_order].sort(() => Math.random() - 0.5);
+      setRankingOrder(shuffled);
+    }
+  }, [quizStarted, currentQuestion, currentQ]);
+
+  // --- Pointer-based DnD for ranking items ---
+  // onPointerDown: user starts dragging
+  const handlePointerDown = (e, index) => {
+    if (showAnswer) return; // do nothing if answer is shown
+    setDraggingIndex(index);
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const onDragOver = (e) => {
-    e.preventDefault();
+  // onPointerMove: reorder items if user is dragging
+  const handlePointerMove = (e) => {
+    if (draggingIndex == null) return;
+    const boundingRect = e.currentTarget.getBoundingClientRect();
+    const pointerY = e.clientY || (e.touches && e.touches[0].clientY);
+    // Figure out which item the pointer is currently over
+    // We can approximate by boundingRect and item height
+    const itemHeight = boundingRect.height / rankingOrder.length;
+    let newIndex = Math.floor((pointerY - boundingRect.top) / itemHeight);
+    if (newIndex < 0) newIndex = 0;
+    if (newIndex >= rankingOrder.length) newIndex = rankingOrder.length - 1;
+
+    if (newIndex !== draggingIndex) {
+      const newOrder = [...rankingOrder];
+      const draggedItem = newOrder.splice(draggingIndex, 1)[0];
+      newOrder.splice(newIndex, 0, draggedItem);
+      setRankingOrder(newOrder);
+      setDraggingIndex(newIndex);
+    }
   };
 
-  const onDrop = (e, dropIndex) => {
-    const dragIndex = e.dataTransfer.getData("dragIndex");
-    if (dragIndex === "" || dragIndex === null) return;
-    const newOrder = [...rankingOrder];
-    const draggedItem = newOrder.splice(dragIndex, 1)[0];
-    newOrder.splice(dropIndex, 0, draggedItem);
-    setRankingOrder(newOrder);
+  // onPointerUp: finalize drag
+  const handlePointerUp = (e) => {
+    setDraggingIndex(null);
+    e.currentTarget.releasePointerCapture(e.pointerId);
   };
 
+  // Render question's interactive elements
   const renderInteraction = (question) => {
     if (question.id === 1 && question.question_type === "slider_year") {
       return (
@@ -159,7 +194,9 @@ function Quiz() {
             onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
             disabled={showAnswer}
           />
-          <span className="slider-value">{answers[question.id] || question.data.min}</span>
+          <span className="slider-value">
+            {answers[question.id] || question.data.min}
+          </span>
           <div className="slider-hint">
             <div className="key-item">
               <img
@@ -195,7 +232,9 @@ function Quiz() {
               onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
               disabled={showAnswer}
             />
-            <span className="slider-value">{answers[question.id] || question.data.min}</span>
+            <span className="slider-value">
+              {answers[question.id] || question.data.min}
+            </span>
           </div>
         );
       case "matching":
@@ -211,15 +250,19 @@ function Quiz() {
                       ...answers,
                       [question.id]: {
                         ...answers[question.id],
-                        [pair.job]: e.target.value
-                      }
+                        [pair.job]: e.target.value,
+                      },
                     })
                   }
                   disabled={showAnswer}
                 >
-                  <option value="" disabled>Select pay gap</option>
+                  <option value="" disabled>
+                    Select pay gap
+                  </option>
                   {question.data.options.map((option, i) => (
-                    <option key={i} value={option}>{option}</option>
+                    <option key={i} value={option}>
+                      {option}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -228,23 +271,28 @@ function Quiz() {
         );
       case "ranking":
         return (
-          <div className="ranking-container">
-            <div className="ranking-label">Highest</div>
+          <div
+            className="ranking-container"
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+          >
+            <div className="ranking-label">Smallest</div>
             <ul className="ranking-list">
               {rankingOrder.map((item, idx) => (
                 <li
                   key={idx}
-                  draggable={!showAnswer}
-                  onDragStart={(e) => onDragStart(e, idx)}
-                  onDragOver={onDragOver}
-                  onDrop={(e) => onDrop(e, idx)}
                   className="ranking-item"
+                  onPointerDown={(e) => handlePointerDown(e, idx)}
+                  style={{
+                    touchAction: "none", // helps mobile pointer events
+                    userSelect: "none",  // prevent text highlight on mobile
+                  }}
                 >
                   {item}
                 </li>
               ))}
             </ul>
-            <div className="ranking-label">Lowest</div>
+            <div className="ranking-label">Largest</div>
           </div>
         );
       default:
@@ -252,6 +300,7 @@ function Quiz() {
     }
   };
 
+  // Render feedback after an answer is shown
   const renderAnswerFeedback = (question) => {
     const feedbackClass = !currentIsCorrect ? "incorrect-feedback" : "";
     switch (question.question_type) {
@@ -277,7 +326,9 @@ function Quiz() {
             <p>Correct Answers:</p>
             <ul>
               {question.data.pairs.map((pair, idx) => {
-                const userOpt = (answers[question.id] && answers[question.id][pair.job]) || "No answer";
+                const userOpt =
+                  (answers[question.id] && answers[question.id][pair.job]) ||
+                  "No answer";
                 const isCorrect = userOpt === pair.correct;
                 return (
                   <li key={idx}>
@@ -316,9 +367,7 @@ function Quiz() {
     <div className="wrapper">
       {showFinal ? (
         <div id="quiz-container" className="quiz-container start-screen">
-          <h2>
-            Your Final Score: {score} / {quizData.length}
-          </h2>
+          <h2>Your Final Score: {score} / {quizData.length}</h2>
           <button className="action-btn" onClick={handleReplay}>
             Replay Quiz
           </button>
@@ -336,7 +385,6 @@ function Quiz() {
         </div>
       ) : (
         <div id="quiz-container" className="quiz-container">
-          {/* Removed the timer section completely */}
           <div className="quiz-step active">
             <h2>Question {currentQuestion + 1}</h2>
             <p className="question-prompt">{currentQ.data.prompt}</p>
@@ -352,7 +400,7 @@ function Quiz() {
               </button>
             ) : (
               <button className="action-btn" onClick={handleNext}>
-              {currentQuestion < quizData.length - 1 ? "Next Question" : "Finish Quiz"}
+                {currentQuestion < quizData.length - 1 ? "Next Question" : "Finish Quiz"}
               </button>
             )}
           </div>
