@@ -9,8 +9,8 @@ const quizData = [
       prompt: "In what year did the UK introduce the Equal Pay Act?",
       min: 1960,
       max: 1990,
-      correct_answer: 1970
-    }
+      correct_answer: 1970,
+    },
   },
   {
     id: 2,
@@ -21,20 +21,21 @@ const quizData = [
         { job: "Floorers & Wall Tilers", correct: "39%" },
         { job: "Train & Tram Drivers", correct: "-11%" },
         { job: "Exam Invigilators", correct: "0%" },
-        { job: "Doctors", correct: "10%" }
+        { job: "Doctors", correct: "10%" },
       ],
-      options: ["39%", "-11%", "0%", "10%"]
-    }
+      options: ["39%", "-11%", "0%", "10%"],
+    },
   },
   {
     id: 3,
     question_type: "slider_pence",
     data: {
-      prompt: "On average, how much does a woman earn for every £1 a man earns?",
+      prompt:
+        "On average, how much does a woman earn for every £1 a man earns?",
       min: 70,
       max: 100,
-      correct_answer: 93
-    }
+      correct_answer: 93,
+    },
   },
   {
     id: 4,
@@ -42,20 +43,29 @@ const quizData = [
     data: {
       prompt: "Rank these from smallest pay gap to largest:",
       // Reversed order to reflect smallest → largest
-      correct_order: ["Northern Ireland", "Scotland", "Wales", "England"]
-    }
+      correct_order: ["Northern Ireland", "Scotland", "Wales", "England"],
+    },
   },
   {
     id: 5,
     question_type: "slider_percent",
     data: {
-      prompt: "What is the average percentage pay difference between mothers and fathers?",
+      prompt:
+        "What is the average percentage pay difference between mothers and fathers?",
       min: 0,
       max: 30,
-      correct_answer: 24
-    }
-  }
+      correct_answer: 24,
+    },
+  },
 ];
+
+// Reference mapping for each question (only for questions with data references)
+const references = {
+  2: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
+  3: "https://www.ciphr.com/infographics/gender-pay-gap-statistics-2024",
+  4: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
+  5: "https://www.theguardian.com/world/2024/mar/08/uk-mothers-earned-444-less-an-hour-than-fathers-in-2023-finds-analysis",
+};
 
 function Quiz() {
   const [quizStarted, setQuizStarted] = useState(false);
@@ -94,7 +104,7 @@ function Quiz() {
         isCorrect = Number(userAnswer) === currentQ.data.correct_answer;
       } else if (currentQ.question_type === "matching") {
         let allCorrect = true;
-        currentQ.data.pairs.forEach(pair => {
+        currentQ.data.pairs.forEach((pair) => {
           if (!userAnswer || userAnswer[pair.job] !== pair.correct) {
             allCorrect = false;
           }
@@ -191,7 +201,9 @@ function Quiz() {
             min={question.data.min}
             max={question.data.max}
             defaultValue={question.data.min}
-            onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
+            onChange={(e) =>
+              setAnswers({ ...answers, [question.id]: e.target.value })
+            }
             disabled={showAnswer}
           />
           <span className="slider-value">
@@ -220,7 +232,43 @@ function Quiz() {
     }
     switch (question.question_type) {
       case "slider_year":
+        return (
+          <div className="slider-container">
+            <input
+              type="range"
+              min={question.data.min}
+              max={question.data.max}
+              defaultValue={question.data.min}
+              onChange={(e) =>
+                setAnswers({ ...answers, [question.id]: e.target.value })
+              }
+              disabled={showAnswer}
+            />
+            <span className="slider-value">
+              {answers[question.id] || question.data.min}
+            </span>
+          </div>
+        );
+
       case "slider_pence":
+        return (
+          <div className="slider-container">
+            <input
+              type="range"
+              min={question.data.min}
+              max={question.data.max}
+              defaultValue={question.data.min}
+              onChange={(e) =>
+                setAnswers({ ...answers, [question.id]: e.target.value })
+              }
+              disabled={showAnswer}
+            />
+            <span className="slider-value">
+              {answers[question.id] || question.data.min}p
+            </span>
+          </div>
+        );
+
       case "slider_percent":
         return (
           <div className="slider-container">
@@ -229,55 +277,55 @@ function Quiz() {
               min={question.data.min}
               max={question.data.max}
               defaultValue={question.data.min}
-              onChange={(e) => setAnswers({ ...answers, [question.id]: e.target.value })}
+              onChange={(e) =>
+                setAnswers({ ...answers, [question.id]: e.target.value })
+              }
               disabled={showAnswer}
             />
             <span className="slider-value">
-              {answers[question.id] || question.data.min}
+              {answers[question.id] || question.data.min}%
             </span>
           </div>
         );
-      // In the `renderInteraction` function, within the "matching" case:
-case "matching":
-  return (
-    <>
-      <div className="match-container">
-        {question.data.pairs.map((pair, idx) => (
-          <div key={idx} className="match-item">
-            <span className="match-job">{pair.job}</span>
-            <select
-              defaultValue=""
-              onChange={(e) =>
-                setAnswers({
-                  ...answers,
-                  [question.id]: {
-                    ...answers[question.id],
-                    [pair.job]: e.target.value
-                  }
-                })
-              }
-              disabled={showAnswer}
-            >
-              <option value="" disabled>
-                Select pay gap
-              </option>
-              {question.data.options.map((option, i) => (
-                <option key={i} value={option}>
-                  {option}
-                </option>
+      case "matching":
+        return (
+          <>
+            <div className="match-container">
+              {question.data.pairs.map((pair, idx) => (
+                <div key={idx} className="match-item">
+                  <span className="match-job">{pair.job}</span>
+                  <select
+                    defaultValue=""
+                    onChange={(e) =>
+                      setAnswers({
+                        ...answers,
+                        [question.id]: {
+                          ...answers[question.id],
+                          [pair.job]: e.target.value,
+                        },
+                      })
+                    }
+                    disabled={showAnswer}
+                  >
+                    <option value="" disabled>
+                      Select pay gap
+                    </option>
+                    {question.data.options.map((option, i) => (
+                      <option key={i} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               ))}
-            </select>
-          </div>
-        ))}
-      </div>
-      <p className="matching-info">
-        In the context of the gender pay gap, a higher positive percentage (+)
-        indicates women are paid less than men, while a negative percentage (–)
-        indicates men are paid less than women.
-      </p>
-    </>
-  );
-
+            </div>
+            <p className="matching-info">
+              In the context of the gender pay gap, a higher positive percentage
+              (+) indicates women are paid less than men, while a negative
+              percentage (–) indicates men are paid less than women.
+            </p>
+          </>
+        );
       case "ranking":
         return (
           <div
@@ -294,7 +342,7 @@ case "matching":
                   onPointerDown={(e) => handlePointerDown(e, idx)}
                   style={{
                     touchAction: "none", // helps mobile pointer events
-                    userSelect: "none",  // prevent text highlight on mobile
+                    userSelect: "none", // prevent text highlight on mobile
                   }}
                 >
                   {item}
@@ -376,13 +424,16 @@ case "matching":
     <div className="wrapper">
       {showFinal ? (
         <div id="quiz-container" className="quiz-container start-screen">
-          <h2>Your Final Score: {score} / {quizData.length}</h2>
+          <h2>
+            Your Final Score: {score} / {quizData.length}
+          </h2>
           <button className="action-btn" onClick={handleReplay}>
             Replay Quiz
           </button>
           <p className="final-message">
-            Thank you for playing our quiz. If you'd like to learn more about the
-            gender pay gap and how it affects all of us, please read more below.
+            Thank you for playing our quiz. If you'd like to learn more about
+            the gender pay gap and how it affects all of us, please read more
+            below.
           </p>
         </div>
       ) : !quizStarted ? (
@@ -409,11 +460,32 @@ case "matching":
               </button>
             ) : (
               <button className="action-btn" onClick={handleNext}>
-                {currentQuestion < quizData.length - 1 ? "Next Question" : "Finish Quiz"}
+                {currentQuestion < quizData.length - 1
+                  ? "Next Question"
+                  : "Finish Quiz"}
               </button>
             )}
           </div>
           <div className="score-display">Score: {score}</div>
+          <div className="reference-container">
+            {references[currentQ.id] && (
+              <p>
+                Reference:{" "}
+                {references[currentQ.id].startsWith("http") ? (
+                  <a
+                    href={references[currentQ.id]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Click Here
+                  </a>
+                ) : (
+                  // If it's not a link, just display the text
+                  references[currentQ.id]
+                )}
+              </p>
+            )}
+          </div>
         </div>
       )}
       <footer></footer>
