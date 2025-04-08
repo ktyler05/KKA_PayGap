@@ -363,5 +363,63 @@ footer {
 
   }
 
-
+.about-page-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 2rem auto; 
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  
+ 
+  .about-banner {
+    text-align: center; 
+    margin-bottom: 1.5rem;
+  }
+  
+  .about-banner img {
+    max-width: 50%;
+    height: auto;
+    border-radius: 8px; 
+  }
+  
+  
+  .about-description {
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    color: #4a3b2c; 
+  }
+  
+ 
+  .about-team {
+    display: flex;
+    flex-wrap: wrap;          
+    justify-content: space-around;
+    gap: 2rem;                
+  }
+  
+  .team-member {
+    flex: 1 1 250px;          
+    max-width: 300px;         
+    text-align: center;       
+  }
+  
+  .team-member img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;     
+    margin-bottom: 0.5rem;
+  }
+  
+  .team-member h3 {
+    margin-bottom: 0.5rem;
+    color: #a16e44;     
+  }
+  
+  .team-member p {
+    color: #555;          
+    line-height: 1.4;
+  }
   
