@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Quiz from './Quiz.js';
-import about from './About.js';
+import About from './About.js';
 import Contact from './Contact.js';
 import './style.css';
 
@@ -24,7 +24,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Quiz />} />
-          <Route path="/About" element={<about />} />
+          <Route path="/About" element={<About />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>
       </div>
