@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Quiz from './Quiz.js';
-import About from './About.js';
+import About from './about.js';
 import Contact from './Contact.js';
 import './style.css';
 

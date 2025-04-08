@@ -1,33 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './style.css';
+import React, { useState, useEffect } from "react";
+import "./style.css";
 
 const quizData = [
   {
     id: 1,
-    question_type: "slider_year",
-    data: {
-      prompt: "In what year did the UK introduce the Equal Pay Act?",
-      min: 1960,
-      max: 1990,
-      correct_answer: 1970,
-    },
-  },
-  {
-    id: 2,
-    question_type: "matching",
-    data: {
-      prompt: "Match these jobs to their average gender pay gap:",
-      pairs: [
-        { job: "Floorers & Wall Tilers", correct: "39%" },
-        { job: "Train & Tram Drivers", correct: "-11%" },
-        { job: "Exam Invigilators", correct: "0%" },
-        { job: "Doctors", correct: "10%" },
-      ],
-      options: ["39%", "-11%", "0%", "10%"],
-    },
-  },
-  {
-    id: 3,
     question_type: "slider_pence",
     data: {
       prompt:
@@ -38,12 +14,35 @@ const quizData = [
     },
   },
   {
-    id: 4,
+    id: 2,
+    question_type: "slider_year",
+    data: {
+      prompt: "In what year did the UK introduce the Equal Pay Act?",
+      min: 1960,
+      max: 1990,
+      correct_answer: 1970,
+    },
+  },
+  {
+    id: 3,
     question_type: "ranking",
     data: {
       prompt: "Rank these from smallest pay gap to largest:",
-      // Reversed order to reflect smallest → largest
-      correct_order: ["Northern Ireland", "Scotland", "Wales", "England"],
+      correct_order: ["Scotland", "Wales", "England"],
+    },
+  },
+  {
+    id: 4,
+    question_type: "matching",
+    data: {
+      prompt: "Match these companies to their median gender pay gap:",
+      pairs: [
+        { job: "Lidl", correct: "0%" },
+        { job: "NHS", correct: "-13%" },
+        { job: "Next", correct: "17.3%" },
+        { job: "HSBC", correct: "48.3" },
+      ],
+      options: ["48.3", "0%", "-13%", "17.3%"],
     },
   },
   {
@@ -59,118 +58,137 @@ const quizData = [
   },
 ];
 
-// Reference mapping for each question (only for questions with data references)
 const references = {
-  2: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
-  3: "https://www.ciphr.com/infographics/gender-pay-gap-statistics-2024",
   4: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
+  1: "https://www.ciphr.com/infographics/gender-pay-gap-statistics-2024",
+  3: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
   5: "https://www.theguardian.com/world/2024/mar/08/uk-mothers-earned-444-less-an-hour-than-fathers-in-2023-finds-analysis",
 };
 
-function Quiz() {
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [scored, setScored] = useState({});
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [score, setScore] = useState(0);
-  const [currentIsCorrect, setCurrentIsCorrect] = useState(null);
-  const [rankingOrder, setRankingOrder] = useState([]);
-  const [showFinal, setShowFinal] = useState(false);
-  const currentQ = quizData[currentQuestion];
+// Optional: If you want different lorem for each question, put them in an array:
+const questionLorems = [
+  "Lorem #1: Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  "Lorem #2: Nullam ac neque at elit condimentum fermentum in ut eros.",
+  "Lorem #3: Maecenas dignissim, nulla id volutpat laoreet, nibh tellus.",
+  "Lorem #4: Cras convallis lacus nec diam fermentum, nec molestie nisl.",
+  "Lorem #5: Aliquam suscipit mauris libero, sed hendrerit ipsum auctor.",
+];
 
-  // For pointer-based drag on the ranking question:
+function Quiz() {
+  // Tracks user input for sliders / matching / etc.
+  const [answers, setAnswers] = useState({});
+
+  // Keep track if a question has been “scored” to avoid re-scoring
+  const [scored, setScored] = useState({});
+
+  // When the user hits “Show Answer” for a question, we store that in showAnswer
+  const [showAnswer, setShowAnswer] = useState({});
+
+  // Overall quiz score
+  const [score, setScore] = useState(0);
+
+  // For the ranking question
+  const [rankingOrder, setRankingOrder] = useState([]);
   const [draggingIndex, setDraggingIndex] = useState(null);
 
-  // Start the quiz
-  const handleStartQuiz = () => {
-    setQuizStarted(true);
+  // Indicate correctness of the most recently scored question
+  const [currentIsCorrect, setCurrentIsCorrect] = useState(null);
+
+  // “visibleUpTo” controls which question we’re up to:
+  // e.g. if visibleUpTo=1, we only show question 0 (+ its lorem).
+  // Once user “Show Answer” for question i, we set visibleUpTo = i+2 => next question appears.
+  const [visibleUpTo, setVisibleUpTo] = useState(1);
+
+  // ----------------------------------------------------------------
+  // ------------------ MATCHING QUESTION HOOKS ----------------------
+  // ----------------------------------------------------------------
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [matchedJobs, setMatchedJobs] = useState({});
+  const [jobColors, setJobColors] = useState({});
+  const [gapColors, setGapColors] = useState({});
+  const [flashRed, setFlashRed] = useState({});
+
+  const colorMap = {
+    Next: "#FFC1CC",
+    HSBC: "#C2E7FF",
+    NHS: "#FFF9C4",
+    Lidl: "#D7BCE8",
   };
 
-  // Show the answer
-  const handleShowAnswer = () => {
-    let isCorrect = false;
-    if (currentQ.question_type === "ranking") {
-      const correctOrder = currentQ.data.correct_order;
-      isCorrect = rankingOrder.every((item, idx) => item === correctOrder[idx]);
-      setAnswers(prev => ({ ...prev, [currentQ.id]: rankingOrder }));
-    } else {
-      const userAnswer = answers[currentQ.id];
-      if (
-        currentQ.question_type === "slider_year" ||
-        currentQ.question_type === "slider_pence" ||
-        currentQ.question_type === "slider_percent"
-      ) {
-        isCorrect = Number(userAnswer) === currentQ.data.correct_answer;
-      } else if (currentQ.question_type === "matching") {
-        let allCorrect = true;
-        currentQ.data.pairs.forEach((pair) => {
-          if (!userAnswer || userAnswer[pair.job] !== pair.correct) {
-            allCorrect = false;
-          }
-        });
-        isCorrect = allCorrect;
-      }
-    }
-    if (!scored[currentQ.id]) {
-      if (isCorrect) {
-        setScore(prev => prev + 1);
-      }
-      setScored(prev => ({ ...prev, [currentQ.id]: true }));
-    }
-    setCurrentIsCorrect(isCorrect);
-    setShowAnswer(true);
-  };
-
-  // Next question or finish
-  const handleNext = () => {
-    setShowAnswer(false);
-    if (currentQuestion < quizData.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
-    } else {
-      setShowFinal(true);
-    }
-  };
-
-  // Replay the quiz
-  const handleReplay = () => {
-    setQuizStarted(false);
-    setCurrentQuestion(0);
-    setAnswers({});
-    setScored({});
-    setShowAnswer(false);
-    setScore(0);
-    setRankingOrder([]);
-    setCurrentIsCorrect(null);
-    setShowFinal(false);
-  };
-
-  // If this question is ranking, shuffle the correct_order to start
+  // Shuffle the ranking question’s items once on mount
   useEffect(() => {
-    if (!quizStarted) return;
-    setShowAnswer(false);
-    setCurrentIsCorrect(null);
-    if (currentQ.question_type === "ranking") {
-      const shuffled = [...currentQ.data.correct_order].sort(() => Math.random() - 0.5);
+    const rankingQ = quizData.find((q) => q.question_type === "ranking");
+    if (rankingQ) {
+      const shuffled = [...rankingQ.data.correct_order].sort(
+        () => Math.random() - 0.5
+      );
       setRankingOrder(shuffled);
     }
-  }, [quizStarted, currentQuestion, currentQ]);
+  }, []);
 
-  // --- Pointer-based DnD for ranking items ---
-  // onPointerDown: user starts dragging
+  // ----------------------------------------------------------------
+  // ------------------- “SHOW ANSWER” BUTTON ------------------------
+  // ----------------------------------------------------------------
+  const handleShowAnswer = (questionId, questionIndex) => {
+    // Reveal the answer for this question
+    setShowAnswer((prev) => ({ ...prev, [questionId]: true }));
+
+    // Score it if not already done
+    if (!scored[questionId]) {
+      const question = quizData[questionIndex];
+      let isCorrect = false;
+
+      if (question.question_type === "ranking") {
+        const correctOrder = question.data.correct_order;
+        isCorrect = rankingOrder.every(
+          (item, idx) => item === correctOrder[idx]
+        );
+        // Store user’s final ranking in answers
+        setAnswers((prev) => ({ ...prev, [questionId]: rankingOrder }));
+      } else if (
+        question.question_type === "slider_year" ||
+        question.question_type === "slider_pence" ||
+        question.question_type === "slider_percent"
+      ) {
+        const userAnswer = answers[questionId];
+        isCorrect = Number(userAnswer) === question.data.correct_answer;
+      } else if (question.question_type === "matching") {
+        // Check each correct pairing
+        let allCorrect = true;
+        for (let { job, correct } of question.data.pairs) {
+          if (!matchedJobs[job] || matchedJobs[job] !== correct) {
+            allCorrect = false;
+            break;
+          }
+        }
+        isCorrect = allCorrect;
+      }
+
+      // Update overall score if correct
+      if (isCorrect) {
+        setScore((prev) => prev + 1);
+      }
+      setScored((prev) => ({ ...prev, [questionId]: true }));
+      setCurrentIsCorrect(isCorrect);
+    }
+
+    // After revealing answer for question i, show the next question i+1:
+    // i.e. visibleUpTo = i+2
+    setVisibleUpTo(questionIndex + 2);
+  };
+
+  // ----------------------------------------------------------------
+  // --------------------- RANKING DRAG LOGIC ------------------------
+  // ----------------------------------------------------------------
   const handlePointerDown = (e, index) => {
-    if (showAnswer) return; // do nothing if answer is shown
     setDraggingIndex(index);
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  // onPointerMove: reorder items if user is dragging
   const handlePointerMove = (e) => {
     if (draggingIndex == null) return;
     const boundingRect = e.currentTarget.getBoundingClientRect();
     const pointerY = e.clientY || (e.touches && e.touches[0].clientY);
-    // Figure out which item the pointer is currently over
-    // We can approximate by boundingRect and item height
     const itemHeight = boundingRect.height / rankingOrder.length;
     let newIndex = Math.floor((pointerY - boundingRect.top) / itemHeight);
     if (newIndex < 0) newIndex = 0;
@@ -185,15 +203,55 @@ function Quiz() {
     }
   };
 
-  // onPointerUp: finalize drag
   const handlePointerUp = (e) => {
     setDraggingIndex(null);
-    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
   };
 
-  // Render question's interactive elements
-  const renderInteraction = (question) => {
-    if (question.id === 1 && question.question_type === "slider_year") {
+  // ----------------------------------------------------------------
+  // --------------------- MATCHING LOGIC ----------------------------
+  // ----------------------------------------------------------------
+  const handleJobClick = (job) => {
+    if (matchedJobs[job]) return; // already matched
+    setSelectedJob(job);
+  };
+
+  const handleGapClick = (gap) => {
+    if (Object.values(matchedJobs).includes(gap)) return; // gap used
+    if (!selectedJob) return; // no job selected
+
+    const correctGap = quizData
+      .find((q) => q.id === 4) // question #2 is matching
+      .data.pairs.find((p) => p.job === selectedJob)?.correct;
+
+    if (correctGap === gap) {
+      // correct match
+      setMatchedJobs((prev) => ({ ...prev, [selectedJob]: gap }));
+      const color = colorMap[selectedJob] || "green";
+      setJobColors((prev) => ({ ...prev, [selectedJob]: color }));
+      setGapColors((prev) => ({ ...prev, [gap]: color }));
+    } else {
+      // flash red
+      setFlashRed((prev) => ({ ...prev, [selectedJob]: true, [gap]: true }));
+      setTimeout(() => {
+        setFlashRed((prev) => ({
+          ...prev,
+          [selectedJob]: false,
+          [gap]: false,
+        }));
+      }, 1000);
+    }
+    setSelectedJob(null);
+  };
+
+  // ----------------------------------------------------------------
+  // -------------- RENDER THE QUESTION INTERACTION -----------------
+  // ----------------------------------------------------------------
+  const renderInteraction = (question, index) => {
+    // Special slider for question #1
+    if (question.id === 2 && question.question_type === "slider_year") {
       return (
         <div className="slider-container">
           <input
@@ -204,7 +262,7 @@ function Quiz() {
             onChange={(e) =>
               setAnswers({ ...answers, [question.id]: e.target.value })
             }
-            disabled={showAnswer}
+            disabled={showAnswer[question.id]}
           />
           <span className="slider-value">
             {answers[question.id] || question.data.min}
@@ -230,6 +288,8 @@ function Quiz() {
         </div>
       );
     }
+
+    // Other question types
     switch (question.question_type) {
       case "slider_year":
         return (
@@ -242,7 +302,7 @@ function Quiz() {
               onChange={(e) =>
                 setAnswers({ ...answers, [question.id]: e.target.value })
               }
-              disabled={showAnswer}
+              disabled={showAnswer[question.id]}
             />
             <span className="slider-value">
               {answers[question.id] || question.data.min}
@@ -261,7 +321,7 @@ function Quiz() {
               onChange={(e) =>
                 setAnswers({ ...answers, [question.id]: e.target.value })
               }
-              disabled={showAnswer}
+              disabled={showAnswer[question.id]}
             />
             <span className="slider-value">
               {answers[question.id] || question.data.min}p
@@ -280,52 +340,73 @@ function Quiz() {
               onChange={(e) =>
                 setAnswers({ ...answers, [question.id]: e.target.value })
               }
-              disabled={showAnswer}
+              disabled={showAnswer[question.id]}
             />
             <span className="slider-value">
               {answers[question.id] || question.data.min}%
             </span>
           </div>
         );
+
       case "matching":
+        const jobList = question.data.pairs.map((p) => p.job);
+        const gapList = question.data.options;
         return (
           <>
-            <div className="match-container">
-              {question.data.pairs.map((pair, idx) => (
-                <div key={idx} className="match-item">
-                  <span className="match-job">{pair.job}</span>
-                  <select
-                    defaultValue=""
-                    onChange={(e) =>
-                      setAnswers({
-                        ...answers,
-                        [question.id]: {
-                          ...answers[question.id],
-                          [pair.job]: e.target.value,
-                        },
-                      })
-                    }
-                    disabled={showAnswer}
-                  >
-                    <option value="" disabled>
-                      Select pay gap
-                    </option>
-                    {question.data.options.map((option, i) => (
-                      <option key={i} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </div>
             <p className="matching-info">
               In the context of the gender pay gap, a higher positive percentage
               (+) indicates women are paid less than men, while a negative
               percentage (–) indicates men are paid less than women.
             </p>
+            <div className="click-match-container">
+              <div className="click-match-col">
+                <h4>Jobs</h4>
+                {jobList.map((job) => {
+                  const alreadyMatched = matchedJobs[job];
+                  const flashingRed = flashRed[job];
+                  const bgColor = jobColors[job] || "";
+                  return (
+                    <div
+                      key={job}
+                      className={`match-card ${alreadyMatched ? "dim" : ""} ${
+                        flashingRed ? "flash-red" : ""
+                      }`}
+                      style={{ backgroundColor: bgColor }}
+                      onClick={() => {
+                        if (!showAnswer[question.id]) handleJobClick(job);
+                      }}
+                    >
+                      {job}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="click-match-col">
+                <h4>Pay Gaps</h4>
+                {gapList.map((gap) => {
+                  const alreadyUsed = Object.values(matchedJobs).includes(gap);
+                  const flashingRed = flashRed[gap];
+                  const bgColor = gapColors[gap] || "";
+                  return (
+                    <div
+                      key={gap}
+                      className={`match-card ${alreadyUsed ? "dim" : ""} ${
+                        flashingRed ? "flash-red" : ""
+                      }`}
+                      style={{ backgroundColor: bgColor }}
+                      onClick={() => {
+                        if (!showAnswer[question.id]) handleGapClick(gap);
+                      }}
+                    >
+                      {gap}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </>
         );
+
       case "ranking":
         return (
           <div
@@ -341,8 +422,8 @@ function Quiz() {
                   className="ranking-item"
                   onPointerDown={(e) => handlePointerDown(e, idx)}
                   style={{
-                    touchAction: "none", // helps mobile pointer events
-                    userSelect: "none", // prevent text highlight on mobile
+                    touchAction: "none",
+                    userSelect: "none",
                   }}
                 >
                   {item}
@@ -352,14 +433,20 @@ function Quiz() {
             <div className="ranking-label">Largest</div>
           </div>
         );
+
       default:
         return null;
     }
   };
 
-  // Render feedback after an answer is shown
+  // ----------------------------------------------------------------
+  // -------------------- RENDER ANSWER FEEDBACK ---------------------
+  // ----------------------------------------------------------------
   const renderAnswerFeedback = (question) => {
+    // If the *most recent* question we scored was incorrect => highlight
+    // (If you want per-question correctness stored individually, you can do so.)
     const feedbackClass = !currentIsCorrect ? "incorrect-feedback" : "";
+
     switch (question.question_type) {
       case "slider_year":
       case "slider_pence":
@@ -377,19 +464,18 @@ function Quiz() {
             </p>
           </div>
         );
+
       case "matching":
         return (
           <div className={`answer-feedback ${feedbackClass}`}>
             <p>Correct Answers:</p>
             <ul>
               {question.data.pairs.map((pair, idx) => {
-                const userOpt =
-                  (answers[question.id] && answers[question.id][pair.job]) ||
-                  "No answer";
-                const isCorrect = userOpt === pair.correct;
+                const userGap = matchedJobs[pair.job] || "No match";
+                const isCorrect = userGap === pair.correct;
                 return (
                   <li key={idx}>
-                    {pair.job}: Your Answer: {userOpt} | Correct: {pair.correct}{" "}
+                    {pair.job}: Your Match: {userGap} | Correct: {pair.correct}{" "}
                     {isCorrect ? (
                       <span className="correct-badge">✓</span>
                     ) : (
@@ -401,10 +487,11 @@ function Quiz() {
             </ul>
           </div>
         );
+
       case "ranking":
         return (
           <div className={`answer-feedback ${feedbackClass}`}>
-            <p>Your Order: {rankingOrder.join(" > ")}</p>
+            <p>Your Order: {answers[question.id]?.join(" > ")}</p>
             <p>Correct Order: {question.data.correct_order.join(" > ")}</p>
             <p>
               {currentIsCorrect ? (
@@ -415,79 +502,107 @@ function Quiz() {
             </p>
           </div>
         );
+
       default:
         return null;
     }
   };
 
+  // ----------------------------------------------------------------
+  // --------------------- MAIN RENDER -------------------------------
+  // ----------------------------------------------------------------
   return (
     <div className="wrapper">
-      {showFinal ? (
-        <div id="quiz-container" className="quiz-container start-screen">
-          <h2>
-            Your Final Score: {score} / {quizData.length}
-          </h2>
-          <button className="action-btn" onClick={handleReplay}>
-            Replay Quiz
-          </button>
-          <p className="final-message">
-            Thank you for playing our quiz. If you'd like to learn more about
-            the gender pay gap and how it affects all of us, please read more
-            below.
+      {/* The top “intro” bubble (always shown). Make it smaller with the new class */}
+      <div className="lorem-container" style={{ marginBottom: "1rem" }}>
+        <h2>Header</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
+          condimentum iaculis cursus. Aliquam sed eros in felis efficitur
+          lacinia at eget lacus. Pellentesque habitant morbi tristique senectus
+          et netus et malesuada fames ac turpis egestas. Aenean eu tristique
+          libero, lacinia mattis dolor. Nunc et dictum lacus. Etiam efficitur ex
+          a mauris semper convallis. Donec rhoncus pretium dui nec iaculis.
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+          posuere cubilia curae; Praesent feugiat, leo sit amet malesuada
+          iaculis, tellus turpis sagittis elit, et efficitur magna justo non
+          lacus. Nullam a elit placerat, sagittis elit ut, volutpat dolor.
+          Integer quis.
+        </p>
+      </div>
+
+      {/* Loop over all questions. Show question i ONLY if i < visibleUpTo. */}
+      {quizData.map((question, i) => {
+        if (i >= visibleUpTo) {
+          // This question not yet revealed
+          return null;
+        }
+        return (
+          <React.Fragment key={question.id}>
+            {/* Question bubble */}
+            <div className="quiz-container quiz-container-smaller">
+              <h2>Question {i + 1}</h2>
+              <p className="question-prompt">{question.data.prompt}</p>
+
+              <div className="interaction-area">
+                {renderInteraction(question, i)}
+              </div>
+
+              {!showAnswer[question.id] ? (
+                <div className="button-group">
+                  <button
+                    className="action-btn"
+                    onClick={() => handleShowAnswer(question.id, i)}
+                  >
+                    Show Answer
+                  </button>
+                </div>
+              ) : (
+                renderAnswerFeedback(question)
+              )}
+
+              {/* Reference link if any */}
+              <div className="reference-container">
+                {references[question.id] && (
+                  <p>
+                    {" "}
+                    {references[question.id].startsWith("http") ? (
+                      <a
+                        href={references[question.id]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Reference
+                      </a>
+                    ) : (
+                      references[question.id]
+                    )}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* The “between” lorem bubble that goes with question i (unless it's the last question) */}
+            {i < quizData.length - 1 && (
+              <div className="lorem-container">
+                <h2>Between Question Lorem Box</h2>
+                <p>{questionLorems[i] || "Lorem ipsum placeholder text..."}</p>
+              </div>
+            )}
+          </React.Fragment>
+        );
+      })}
+
+      {/* After the last question is revealed, if the user has “stepped past” it, show scoreboard */}
+      {visibleUpTo > quizData.length && (
+        <div className="lorem-container">
+          <h2>Your Final Score</h2>
+          <p className="score-display">
+            Score: {score} / {quizData.length}
           </p>
         </div>
-      ) : !quizStarted ? (
-        <div id="quiz-container" className="quiz-container start-screen">
-          <h1>Welcome to the Gender Pay Gap Quiz</h1>
-          <button className="action-btn" onClick={handleStartQuiz}>
-            Play Quiz
-          </button>
-        </div>
-      ) : (
-        <div id="quiz-container" className="quiz-container">
-          <div className="quiz-step active">
-            <h2>Question {currentQuestion + 1}</h2>
-            <p className="question-prompt">{currentQ.data.prompt}</p>
-            <div className="interaction-area">
-              {renderInteraction(currentQ)}
-            </div>
-            {showAnswer && renderAnswerFeedback(currentQ)}
-          </div>
-          <div className="button-group">
-            {!showAnswer ? (
-              <button className="action-btn" onClick={handleShowAnswer}>
-                Show Answer
-              </button>
-            ) : (
-              <button className="action-btn" onClick={handleNext}>
-                {currentQuestion < quizData.length - 1
-                  ? "Next Question"
-                  : "Finish Quiz"}
-              </button>
-            )}
-          </div>
-          <div className="score-display">Score: {score}</div>
-          <div className="reference-container">
-            {references[currentQ.id] && (
-              <p>
-                Reference:{" "}
-                {references[currentQ.id].startsWith("http") ? (
-                  <a
-                    href={references[currentQ.id]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Click Here
-                  </a>
-                ) : (
-                  // If it's not a link, just display the text
-                  references[currentQ.id]
-                )}
-              </p>
-            )}
-          </div>
-        </div>
       )}
+
       <footer></footer>
     </div>
   );

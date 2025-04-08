@@ -44,6 +44,11 @@ body {
     animation: fadeIn 0.5s ease-out;
     padding-bottom: 7rem;
 }
+.quiz-container-smaller {
+    max-width: 600px; 
+    padding: 1rem;   
+  }
+  
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -271,7 +276,7 @@ footer {
 
   .reference-container {
     position: absolute;
-    bottom: 1rem;
+    top: 1rem;
     left: 1rem;
     max-width: 90%; 
     color: #666; 
@@ -290,3 +295,73 @@ footer {
   .reference-container a:hover {
     text-decoration: underline;
   }
+  /* NEW matching question columns */
+.click-match-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+  .click-match-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .click-match-col h4 {
+    margin-bottom: 0.5rem;
+    color: #a16e44;
+  }
+
+.match-card {
+    width: 200px;             
+    padding: 0.75rem;          
+    border: 2px solid #000;     
+    border-radius: 4px;
+    color: #000;                
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    transition: background 0.3s;
+  }
+  
+  .match-card:hover {
+    background: #f7f7f7;
+  }
+  
+
+  
+
+  .match-card.selected {
+    background-color: #f0f0f0;
+  }
+  
+  
+  .flash-red {
+    animation: flashRed 1s;
+  }
+  
+  @keyframes flashRed {
+    0%   { background-color: #ffcccc; }
+    50%  { background-color: #ff6666; }
+    100% { background-color: transparent; }
+  }
+  
+
+.lorem-container {
+    width: 100%;          
+    max-width: none;          
+    margin: 1rem 0;           
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    padding-left: 17rem;
+    padding-right: 17rem; 
+    padding-top: 1rem;  
+    padding-bottom: 3rem;         
+  
+
+  }
+
+
+  
