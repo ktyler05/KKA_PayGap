@@ -16,7 +16,7 @@ function App() {
           <nav className="app-nav">
             <ul>
               <li><Link to="/">Home</Link></li>
-              <li><Link to="/About">About</Link></li>
+              <li><Link to="/about">About</Link></li>
               <li><Link to="/Contact">Contact-us</Link></li>
             </ul>
           </nav>
@@ -24,7 +24,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Quiz />} />
-          <Route path="/About" element={<About />} />
+          <Route path="/about" element={<About />} />
           <Route path="/Contact" element={<Contact />} />
         </Routes>
       </div>
