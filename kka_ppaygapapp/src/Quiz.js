@@ -359,7 +359,7 @@ function Quiz() {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
-                your answer: {answers[question.id]}
+                Your Answer: {answers[question.id]}
                 {question.question_type === "slider_percent"
                   ? "%"
                   : question.question_type === "slider_pence"
