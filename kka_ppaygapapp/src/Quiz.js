@@ -43,7 +43,7 @@ const quizData = [
     question_type: "slider_percent",
     data: {
       prompt:
-        "The average percentage pay difference between mothers and fathers is XX% ",
+        "The average percentage pay difference between women and men is 13.1%% What is the average percentage pay difference between mothers and fathers? ",
       min: 0,
       max: 30,
       correct_answer: 24,
@@ -278,9 +278,9 @@ function Quiz() {
         return (
           <>
             <p className="matching-info">
-              A higher positive percentage (+) indicates men are paid more than
-              women, while a negative percentage (–) indicates men are paid less
-              than women.
+              A positive percentage (+) indicates men are paid more than women,
+              while a negative percentage (–) indicates men are paid less than
+              women.
             </p>
             <p className="matching-info">
               Click on a Company and then Click on a pay gap percentage to match
