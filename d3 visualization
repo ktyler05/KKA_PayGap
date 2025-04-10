@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay graph 2</title>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+    <div id="vis"></div>
+
+    <script>
+
+
+let d = [{'percentage': [-97.5, -92.5], 'companies': 0}, {'percentage': [-92.5, -87.5], 'companies': 0}, {'percentage': [-87.5, -82.5], 'companies': 0}, {'percentage': [-82.5, -77.5], 'companies': 0}, {'percentage': [-77.5, -72.5], 'companies': 0}, {'percentage': [-72.5, -67.5], 'companies': 0}, {'percentage': [-67.5, -62.5], 'companies': 0}, {'percentage': [-62.5, -57.5], 'companies': 2}, {'percentage': [-57.5, -52.5], 'companies': 0}, {'percentage': [-52.5, -47.5], 'companies': 1}, {'percentage': [-47.5, -42.5], 'companies': 1}, {'percentage': [-42.5, -37.5], 'companies': 2}, {'percentage': [-37.5, -32.5], 'companies': 2}, {'percentage': [-32.5, -27.5], 'companies': 6}, {'percentage': [-27.5, -22.5], 'companies': 6}, {'percentage': [-22.5, -17.5], 'companies': 12}, {'percentage': [-17.5, -12.5], 'companies': 23}, {'percentage': [-12.5, -7.5], 'companies': 48}, {'percentage': [-7.5, -2.5], 'companies': 87}, {'percentage': [-2.5, 2.5], 'companies': 514}, {'percentage': [2.5, 7.5], 'companies': 314}, {'percentage': [7.5, 12.5], 'companies': 272}, {'percentage': [12.5, 17.5], 'companies': 218}, {'percentage': [17.5, 22.5], 'companies': 165}, {'percentage': [22.5, 27.5], 'companies': 132}, {'percentage': [27.5, 32.5], 'companies': 101}, {'percentage': [32.5, 37.5], 'companies': 56}, {'percentage': [37.5, 42.5], 'companies': 63}, {'percentage': [42.5, 47.5], 'companies': 37}, {'percentage': [47.5, 52.5], 'companies': 28}, {'percentage': [52.5, 57.5], 'companies': 12}, {'percentage': [57.5, 62.5], 'companies': 14}, {'percentage': [62.5, 67.5], 'companies': 2}, {'percentage': [67.5, 72.5], 'companies': 1}, {'percentage': [72.5, 77.5], 'companies': 0}, {'percentage': [77.5, 82.5], 'companies': 1}, {'percentage': [82.5, 87.5], 'companies': 2}, {'percentage': [87.5, 92.5], 'companies': 0}, {'percentage': [92.5, 97.5], 'companies': 1}];
+        const width = 600;
+        const height = 500;     
+
+        let margin = {
+            top: 40, 
+            bottom: 60,
+            left: 40,
+            right: 40
+        };
+
+        d.forEach(item => {
+            midpoint = (item.percentage[0] + item.percentage[1])/2;
+            item.label = "" + midpoint;//`${item.percentage[0]} to ${item.percentage[1]}`;
+        });
+
+        let xScale = d3.scaleBand()
+            .domain(d.map(d => d.label))
+            .range([margin.left, width - margin.right])
+            .padding(0.2);
+
+        let yScale = d3.scaleLinear()
+        .domain([0, d3.max(d, d => d.companies)])
+        .range([height - margin.bottom, margin.top]);
+
+
+        let xAxis = d3.axisBottom(xScale)
+        .tickValues(["-75", "-25", "-50", "0", "25", "50", "75"])
+        .tickSize(0)
+        .tickPadding(10);
+
+        let yAxis = d3.axisLeft(yScale)
+        .tickSize(0)
+        .tickPadding(10);
+
+        let colourScale = d3.scaleOrdinal()
+        .domain(["negative_gap", "zero_gap", "positive_gap"])
+        .range(["#009d9a", "#f2f2f2", "#570408"]);
+
+        let svg = d3.selectAll("#vis")
+        .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        
+        // axis
+        svg.append("g")
+        .attr("transform", `translate(${margin.left}, 0)`)
+        .call(yAxis)
+        .call(g => g.select(".domain").remove())
+        .style("font-size", "13px")
+        .selectAll("path");
+
+        svg.append("g")
+        .attr("transform", `translate(0, ${height - margin.bottom})`)
+        .call(xAxis)
+        .style("font-size", "13px");
+        //.style("stroke-width", "1.75px");
+
+        // horizontal gridlines
+        // svg.selectAll("line.horizontal-grid")
+        // .data(y.ticks(5))
+        // .enter()
+        // .append("line")
+        // .attr("class", "horizontal-grid")
+        // .attr("y1", function(d) {return yScale(d.companies);})
+        // .attr("x1", 0)
+        // .attr("y2", function(d) { return yScale(d.companies);})
+        // .attr("x2", width)
+        // .style("stroke", "gray")
+        // .style("stroke-width", 0.5);
+
+        //title
+        svg.append("text")
+        .attr("transform", "translate(" + (width / 6) + "," + (margin.top - 10) + ")")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
+        .style("font-family", "sans-serif")
+        .text("Three-quarters of companies paid men more than woman in 2024");
+
+        svg.selectAll("rect")
+    .data(d)
+    .join(
+        enter => {
+            enter.append("rect")
+                .attr("x", d => xScale(d.label))
+                .attr("y", d => yScale(d.companies))
+                .attr("width", d => xScale.bandwidth())
+                .attr("height", d => height - margin.bottom - yScale(d.companies))
+                .attr("fill", d => {
+                    if ((d.percentage[0] < 2.5) && (d.percentage[1] > -2.5)) {
+                        return colourScale("zero");  
+                    } else if (d.percentage[0] >= 2.5) {
+                        return colourScale("negative");  
+                    } else {
+                        return colourScale("positive");  
+                    }
+                });
+        },
+        update => {
+            update
+                .attr("x", d => xScale(d.label))
+                .attr("y", d => yScale(d.companies))  
+                .attr("width", 5)
+                    // let w = xScale(d.percentage[1]) - xScale(d.percentage[0]);
+
+                .attr("height", d => height - margin.bottom - yScale(d.companies))
+                .attr("fill", d => {
+                    if (d.percentage[0] < 0) {
+                        return colourScale("negative");  
+                    } else if (d.percentage[0] === 0) {
+                        return colourScale("zero"); 
+                    } else {
+                        return colourScale("positive"); 
+                    }
+                });
+        },
+        exit => exit.remove()  
+    );
+
+    //x axis label
+    svg.append("text")
+    .attr("transform", "translate(" + (width / 2) + "," + (height - margin.bottom + 35) + ")")
+    .style("font-size", "10px")
+    .style("font-family", "sans-serif")
+    .attr("text-anchor", "middle")
+    .text("Median percentage pay gap (%)");
+
+    //labels 
+    svg.append("text")
+    .attr("transform", "translate(" + (width/4) + "," + (height/2) + ")")
+    .style("font-family", "sans-serif")
+    .style("font-size", "10px")
+    .attr("text-anchor", "middle")
+    .text("319 companies paid women more");
+
+    svg.append("text")
+    .attr("transform", "translate(" + ((width/4) * 3) + "," + (height/2) + ")")
+    .style("font-family", "sans-serif")
+    .style("font-size", "10px")
+    .attr("text-anchor", "middle")
+    .text("1627 companies pay men more")
+
+    svg.append("text")
+    .attr("transform", "translate(" + (width/4) + "," + (height - 2) + ")")
+    .style("font-family", "sans-serif")
+    .style("font-size", "7px")
+    .style("text-anchor", "middle")
+    .text("https://gender-pay-gap.service.gov.uk/viewing/download - Reporting year 2024 to 2025 ");
+
+
+
+
+    </script>
+    
+</body>
+</html>
