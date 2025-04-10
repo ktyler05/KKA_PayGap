@@ -359,7 +359,7 @@ function Quiz() {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
-                Your Answer: {answers[question.id]}
+                your answer: {answers[question.id]}
                 {question.question_type === "slider_percent"
                   ? "%"
                   : question.question_type === "slider_pence"
@@ -367,7 +367,7 @@ function Quiz() {
                   : ""}
               </p>
               <p>
-                Correct Answer: {question.data.correct_answer}
+                correct answer: {question.data.correct_answer}
                 {question.question_type === "slider_percent"
                   ? "%"
                   : question.question_type === "slider_pence"
@@ -375,7 +375,7 @@ function Quiz() {
                   : ""}
               </p>
               <p>
-                <span className="incorrect-badge">Incorrect</span>
+                <span className="incorrect-badge">incorrect</span>
               </p>
             </div>
           );
@@ -386,14 +386,14 @@ function Quiz() {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
-                <span className="correct-badge">Correct Answer</span>
+                <span className="correct-badge">correct answer</span>
               </p>
             </div>
           );
         } else {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
-              <p>Correct Answers:</p>
+              <p>correct answers: </p>
               <ul>
                 {question.data.pairs.map((pair, idx) => {
                   const userGap = matchedJobs[pair.job] || "No match";
