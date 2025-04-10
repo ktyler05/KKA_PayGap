@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Quiz from './Quiz.js';
 import About from './About.js';
-import Contact from './Contact.js';
 import './style.css';
 
 function App() {
@@ -17,7 +16,6 @@ function App() {
             <ul>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/About">About</Link></li>
-              <li><Link to="/Contact">Contact-us</Link></li>
             </ul>
           </nav>
         </header>
@@ -25,7 +23,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Quiz />} />
           <Route path="/About" element={<About />} />
-          <Route path="/Contact" element={<Contact />} />
         </Routes>
       </div>
     </Router>
