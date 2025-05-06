@@ -83,7 +83,6 @@ function About() {
           </p>
         </div>
       </div>
-      <footer></footer>
     </div>
   );
 }
