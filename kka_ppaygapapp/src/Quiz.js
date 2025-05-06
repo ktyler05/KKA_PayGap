@@ -375,7 +375,7 @@ function Quiz() {
                   : ""}
               </p>
               <p>
-                <span className="incorrect-badge">incorrect</span>
+                <span className="incorrect-badge">Incorrect</span>
               </p>
             </div>
           );
@@ -386,7 +386,7 @@ function Quiz() {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
-                <span className="correct-badge">correct answer</span>
+                <span className="correct-badge">Correct answer</span>
               </p>
             </div>
           );
