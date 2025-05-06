@@ -55,7 +55,7 @@ let d = [{'percentage': [-97.5, -92.5], 'companies': 0}, {'percentage': [-92.5, 
             .attr("width", width)
             .attr("height", height);
 
-        
+
         // axis
         svg.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
@@ -70,19 +70,6 @@ let d = [{'percentage': [-97.5, -92.5], 'companies': 0}, {'percentage': [-92.5, 
         .style("font-size", "13px");
         //.style("stroke-width", "1.75px");
 
-        // horizontal gridlines
-        // svg.selectAll("line.horizontal-grid")
-        // .data(y.ticks(5))
-        // .enter()
-        // .append("line")
-        // .attr("class", "horizontal-grid")
-        // .attr("y1", function(d) {return yScale(d.companies);})
-        // .attr("x1", 0)
-        // .attr("y2", function(d) { return yScale(d.companies);})
-        // .attr("x2", width)
-        // .style("stroke", "gray")
-        // .style("stroke-width", 0.5);
-
         //title
         svg.append("text")
         .attr("transform", "translate(" + (width / 6) + "," + (margin.top - 10) + ")")
@@ -90,6 +77,21 @@ let d = [{'percentage': [-97.5, -92.5], 'companies': 0}, {'percentage': [-92.5, 
         .style("font-weight", "bold")
         .style("font-family", "sans-serif")
         .text("Three-quarters of companies paid men more than woman in 2024");
+
+        // horizontal gridlines
+        svg.selectAll("line.horizontal-grid")
+        .data(yScale.ticks(5))
+        .enter()
+        .append("line")
+            .attr("class", "horizontal-grid")
+            .attr("x1", margin.left)
+            .attr("x2", width-margin.right)
+            .attr("y1", d => yScale(d))
+            .attr("y2", d => yScale(d))
+            .style("stroke", "gray")
+            .style("stroke-width", 0.5)
+            .style("stroke-dasharray", "3 3");
+
 
         svg.selectAll("rect")
     .data(d)
@@ -159,7 +161,7 @@ let d = [{'percentage': [-97.5, -92.5], 'companies': 0}, {'percentage': [-92.5, 
     .style("font-family", "sans-serif")
     .style("font-size", "7px")
     .style("text-anchor", "middle")
-    .text("https://gender-pay-gap.service.gov.uk/viewing/download - Reporting year 2024 to 2025 ");
+    .text("Source: https://gender-pay-gap.service.gov.uk/viewing/download - Reporting year 2024 to 2025 ");
 
 
 
