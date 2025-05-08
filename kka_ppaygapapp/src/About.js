@@ -1,7 +1,6 @@
 import React from 'react';
 import './style.css';
 
-// Adjust these paths if your folder structure is different
 import KKA from "./DigInvImg/KKA.png";
 import Kendra from "./DigInvImg/Kendra.png";
 import Kim from "./DigInvImg/Kim.png";

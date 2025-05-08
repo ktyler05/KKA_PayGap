@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./style.css";
 import womenImage from "./DigInvImg/women.png";
+import genImage from "./DigInvImg/home.png";
+
 
 const quizData = [
   {
@@ -421,7 +423,13 @@ function Quiz() {
 
   // --------------------- MAIN RENDER -------------------------------
   return (
+
+    
+
     <div className="wrapper">
+      <div className="hero-image-container">
+        <img src={genImage} alt="Pay Gap Banner" className="hero-image" />
+      </div>
       {/* The top “intro” bubble (always shown). Make it smaller with the new class */}
       <div className="lorem-container" style={{ marginBottom: "1rem" }}>
         <h2>The Gender Pay Gap</h2>
