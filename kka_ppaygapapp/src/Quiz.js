@@ -45,7 +45,7 @@ const quizData = [
     question_type: "slider_percent",
     data: {
       prompt:
-        "The average percentage pay difference between women and men is 13.1%% What is the average percentage pay difference between mothers and fathers? ",
+        "The average percentage pay difference between women and men is 13.1% What is the average percentage pay difference between mothers and fathers? ",
       min: 0,
       max: 30,
       correct_answer: 24,
