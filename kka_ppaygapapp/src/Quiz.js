@@ -72,7 +72,6 @@ const betweenTitles = [
   "The motherhood penalty",
 ];
 
-
 function Quiz() {
   // Tracks user input for sliders / matching / etc.
   const [answers, setAnswers] = useState({});
@@ -442,13 +441,12 @@ function Quiz() {
           lower-paying sectors such as childcare and education are
           overwhelmingly female. But this only paints a partial picture;
           crucially ignoring the existence of a gender pay gap within
-          occupations. Even when men and women work the same hours in the
-          same roles, nearly two-thirds of the gender pay gap remains
-          unexplained.
+          occupations. Even when men and women work the same hours in the same
+          roles, nearly two-thirds of the gender pay gap remains unexplained.
         </p>
         <p>
-          This issue therefore requires a deeper
-          look at the societal and economic forces which underpin it.
+          This issue therefore requires a deeper look at the societal and
+          economic forces which underpin it.
         </p>
       </div>
 
@@ -502,31 +500,48 @@ function Quiz() {
             </div>
 
             {/* The “between” lorem bubble that goes with question i (render for every question) */}
+            {/* The “between” lorem bubble that goes with question i */}
             {i < quizData.length && (
-              <div className="lorem-container">
-                <h2>{betweenTitles[i]}</h2>
-                {(() => {
-                  const text =
-                    questionLorems[i] || "Lorem ipsum placeholder text...";
-                  if (text.includes("%%WOMEN_IMG%%")) {
-                    const parts = text.split("%%WOMEN_IMG%%");
-                    return parts.map((part, idx) => (
-                      <React.Fragment key={idx}>
-                        <p>{part}</p>
-                        {idx < parts.length - 1 && (
-                          <div style={{ textAlign: "center" }}>
-                            <img
-                              src={womenImage}
-                              alt="Women"
-                              style={{ maxWidth: "100%", margin: "1rem auto" }}
-                            />
-                          </div>
-                        )}
-                      </React.Fragment>
-                    ));
-                  }
-                  return <p>{text}</p>;
-                })()}
+              <div
+                className={`between-wrapper ${
+                  showAnswer[question.id] ? "" : "blurred"
+                }`}
+              >
+                <div className="lorem-container">
+                  <h2>{betweenTitles[i]}</h2>
+                  {(() => {
+                    const text =
+                      questionLorems[i] || "Lorem ipsum placeholder text...";
+                    if (text.includes("%%WOMEN_IMG%%")) {
+                      const parts = text.split("%%WOMEN_IMG%%");
+                      return parts.map((part, idx) => (
+                        <React.Fragment key={idx}>
+                          <p>{part}</p>
+                          {idx < parts.length - 1 && (
+                            <div style={{ textAlign: "center" }}>
+                              <img
+                                src={womenImage}
+                                alt="Women"
+                                style={{
+                                  maxWidth: "100%",
+                                  margin: "1rem auto",
+                                }}
+                              />
+                            </div>
+                          )}
+                        </React.Fragment>
+                      ));
+                    }
+                    return <p>{text}</p>;
+                  })()}
+                </div>
+
+                {/* overlay */}
+                {!showAnswer[question.id] && (
+                  <div className="learn-overlay">
+                    <p>To learn more, answer the question above first.</p>
+                  </div>
+                )}
               </div>
             )}
           </React.Fragment>
