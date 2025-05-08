@@ -83,7 +83,11 @@ function About() {
           </p>
         </div>
       </div>
-      <footer></footer>
+      <footer>
+      <p>
+            The images on this page were made with the use of generative AI 
+          </p>
+      </footer>
     </div>
   );
 }
