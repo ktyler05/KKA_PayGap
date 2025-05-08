@@ -22,9 +22,9 @@ body {
     background: #ffffff;
     padding: 0.5rem 1rem;
     border-radius: 60px;
-    display: inline-block;
+    display: flex;
     margin: 1rem;
-    text-align: left;
+    text-align: center;
 }
 .app-header h1 {
     color: #a05621;

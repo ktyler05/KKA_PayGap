@@ -10,7 +10,7 @@ function App() {
       <div className="App">
         <header className="header-container">
           <div className="app-header">
-            <h1>Gender Pay Gap Quiz</h1>
+            <h1>Know the Gap</h1>
           </div>
           <nav className="app-nav">
             <ul>
