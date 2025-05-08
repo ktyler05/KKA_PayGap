@@ -417,16 +417,14 @@ footer {
   
 
 .lorem-container {
-    width: 100%;          
-    max-width: none;          
+        
     margin: 1rem 0;           
     background: #ffffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-    padding-left: 17rem;
-    padding-right: 17rem; 
-    padding-top: 1rem;  
-    padding-bottom: 3rem;         
+    padding-left: 5rem;
+    padding-right: 5rem; 
+   
   
 
   }
