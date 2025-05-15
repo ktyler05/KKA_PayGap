@@ -3,6 +3,7 @@ import "./style.css";
 import genImage from "./DigInvImg/home.png";
 import equalImage from "./DigInvImg/Equal.png";
 import motherImage from "./DigInvImg/mother.png";
+import graphImg from "./DigInvImg/graph.png";
 
 const quizData = [
   {
@@ -61,10 +62,10 @@ const references = {
 };
 
 const questionLorems = [
-  "Crucially, the gender pay gap increases over time; widening gradually but significantly from an individual’s late 20s and early 30s. Men’s wages tend to continue growing rapidly at this point in the life cycle (particularly for the highly educated), while women's wages plateau.\n\nOn average, every month working women take home £631 less than men - that’s £7,572 over the course of a year. This means that on average women ‘stop earning’ on November 20th every year – from which date they effectively work for free compared to their male counterparts.\n\nAccording to the Young Women’s Trust, about one fifth of the gender pay gap can be accounted for by differing jobs and sectors. By contrast, around two thirds of the income gap occurs because women are paid less even when working in similar jobs and sectors and having similar characteristics.",
-  "The Equal Pay Act was introduced in the UK in 1970, based on the 1963 Act of the same name in the United States. It enshrined the right to equal pay for equal work between men and women and significantly reduced the institutional barriers to pay equality.\n\nCrucial, equal pay is a related but unidentical concept to the Gender Pay Gap.\n\nThis allowed individuals to bring claims not only when their employer pays them less than men for doing the same or similar work, but also when they are in a role that is equally demanding in terms of effort, skill or responsibility.\n\nIt forms a crucial part of the legislative history of progress towards equal pay.\n\n1944: The Education Act was introduced reading that no women were to be removed from employment as a teacher by reasons of marriage. It took 27 years for the marriage bar to fully take effect as married women were not allowed to work as teachers until in 1919 the ‘Sex Disqualification Removal Act’ was introduced.\n\n1968: A group of around 187 female sewing machinists at the Ford Motor Company’s Dagenham factory striked for equal pay. Their work stitching car seat covers was classified as “unskilled” and they were consequently paid 15% less than their male counterparts. The Labour Employment Minister Barbara Castle intervened on their behalf to negotiate a settlement.\n\n%%EQUAL_IMG%%\n\n1970: Castle introduced the Equal Pay Bill into the House of Commons. However, it was another nine years until 1984 when the sewing machinists at Ford would receive equal pay and earn the same grade as their male colleagues.\n\n1975: It was by Barbara Castle that the Sex Discrimination Act as well as the Equal Pay Act were introduced in 1975, around the same time that the Equal Opportunities Commission (EOC) was established to tackle the issue of sex discrimination, helping future cases with Employment Tribunals and the courts.\n\nDirection of legislative action today\n\nDespite previous legislation, the Gender Pay Gap remains. According to PwC, based on the rate of progress between 2011 and 2023 it would take 29 years to close the gender pay gap in the UK. There is thus pressure on the political parties to take action to close the gap. However, different parties display different levels of commitment.",
-  "Since 2017, the UK government has required all employers with 250 or more employees to disclose their gender pay gap on an annual basis.\n\nThere's a stark difference between the median hourly percent at private and public companies included in the compulsory reporting figures. Private: 5.2, public: 14.3\n\nHowever, despite eight years of compulsory reporting, the gender pay gap has only shown narrow improvements year on year. Co-Executive Director Priya from the campaign group Equality Trust points out that “evidence has shown that mandatory pay gap reporting in and of itself has not proved to be effective in reducing the gaps.”\n\n“Both of those gaps [CEO and gender pay] have been increasing, even among companies who report so reporting hasn't brought about the change we'd want to see.”\n\nThe Equality Trust now campaigns “for mandatory action plans and for the regulators - in this case the EHRC, to have more resource and powers to enforce compliance and deal with non-compliance.”",
-  "Cara (not her real name)...\n\n(Interviewee did not want to be named)\n\n“I was always aware of the gender pay gap, but being pregnant made it personal.” says an associate architectural designer. Becoming a parent is something she has always wanted; however, she has always worked hard for her career - earning a degree in architectural designing and landing a job at an international company in the design and consulting industry. The architect is about to give birth to her first newborn and had to give up a big project, harming her career progression in the architectural industry.\n\n%%MOTHER_IMG%%\n\nThe “motherhood penalty” is the impact of the disadvantages women face in the workplace when they become mothers. The long hours spent at work are viewed by employers as a sign of commitment and reliability. But taking maternity leave can impact one’s career by “being seen as less reliable.”\n\nA study was released highlighting the impact of the “motherhood penalty” by comparing the hourly earnings between mothers and fathers. It showed that mothers earn on average 24% less per hour than fathers, which is £4.44 per hour.\n\nSome jobs in the UK offer maternity leave benefits but may affect other sources of income such as bonuses. “I have to consider how being off the project might impact my eligibility for project-based bonuses,” said the associate designer.\n\nAn analysis by the Institute for Fiscal Studies (IFS) found that most of the gender pay gaps are caused by parenthood. It found that while the average earnings of men are not affected by parenthood, women’s earnings decrease significantly when they become parents.\n\nThere’s a perception in certain workplaces where you’re seen as less committed because you choose to focus on your family over your career. The associate architectural designer said, “That perception can influence how you progress in your career, which I think men typically don’t face in the same way.”\n\nThe associate designer expresses her concerns for a major project that she was leading before she got pregnant. Architecture is project-driven and requires long hours and consistent involvement - and when there is time taken off it feels as though “your career is put on hold.” Those who take maternity leave often return to find they’ve been passed over for key projects or leadership roles, which, although not intentional, happens because the ongoing project must carry on. “Once you’re back it’s like reestablishing your place within the team and we have to compensate.”\n\nThe architect designer says that changes are needed to see a pay and career progression for women. Some of these changes would be to have more transparency in how bonuses and pay rises are calculated after maternity leave or to create ways to accommodate career breaks without penalising women. These sorts of changes can help make a difference.",
+  "The gender pay gap increases over time, widening gradually but significantly from your late 20s and early 30s. Men’s wages tend to continue growing rapidly at this point (particularly for the highly educated), while women's wages plateau.\n\nOn average, every month working women take home £631 less than men – that’s £7,572 over the course of a year. This means that on average women ‘stop earning’ in early November every year.\n\nAccording to the anti-sexism group Young Women’s Trust, most of the income gap occurs because women are paid less even when working in similar jobs and sectors.",
+  "The Equal Pay Act was introduced in the UK in 1970. It enshrined the right to equal pay for equal work between men and women and significantly reduced institutional barriers to pay equality. Equal pay is a related but different concept to the gender pay gap. The 1970 Act allowed women to bring claims not only when their employer pays them less than men for doing the same work, but also when they are in a job that is equally demanding in terms of effort, skill or responsibility.\n\n%%EQUAL_IMG%%\n\nIt forms a crucial part of the legislative history of progress towards equal pay.\n\n1944: The Education Act said a woman could not be fired from her teaching job if she got married.\n\n1968: A group of 187 female sewing machinists at the Ford Motor Company’s Dagenham factory went on strike for equal pay. Their work stitching car seat covers was classified as unskilled and so they were paid 15% less than their male counterparts. They secured a pay rise but not the same pay as their male colleagues.\n\n1975: It was by Barbara Castle that the Sex Discrimination Act as well as the Equal Pay Act were introduced in 1975, around the same time that the Equal Opportunities Commission (EOC) was established to tackle the issue of sex discrimination, helping future cases with Employment Tribunals and the courts.\n\nDirection of legislative action today\n\nThe gender pay gap remains. PwC estimates that based on the rate of progress between 2011 and 2023 it will take 29 years to close the gender pay gap in the UK.",
+  "The UK government requires all employers with 250 or more employees to disclose their gender pay gap every year.\n\n%%GRAPH_IMG%%\n\nThere is a clear difference between private and public companies in the data they report. In the private sector, men’s median salary is 5.2% higher than women’s, while in the public sector it is 14.35% higher.\n\nDespite eight years of mandatory reporting, there has been only limited progress in closing the gender pay gap. Priya Sahni-Nicholas from the campaign group Equality Trust said that 'evidence has shown that mandatory pay gap reporting in and of itself has not proved to be effective in reducing the gaps.'\n\nThe Equality Trust is calling for more funding and stronger powers for the Equality and Human Rights Commission. It wants companies to be required to publish clear action plans to reduce gendered pay disparity and face consequences if they fail to do so.\n\nThe group also warned that the gender pay gap has increased at times, even among companies that already report, suggesting that reporting alone has not produced the meaningful change needed.",
+  'Cara (not her real name) had to give up a big project when she became pregnant. The XX-year-old architectural designer feels this could damage her career. "I was always aware of the gender pay gap, but being pregnant made it personal," she said.\n\n%%MOTHER_IMG%%\n\nThe "motherhood penalty" is the impact of the disadvantages women face in the workplace when they become mothers. The long hours spent at work are viewed by employers as a sign of commitment and reliability. But taking maternity leave can impact one\'s career if your employer sees you as less available.\n\nSome jobs in the UK offer maternity leave benefits but other sources of income such as bonuses may still be affected. "I have to consider how being off the project might impact my eligibility for project-based bonuses," said Cara.\n\nOne study showed that, on average, mothers earned only three quarters of what fathers made.\n\nAnother analysis, by the Institute for Fiscal Studies, found that most of the gender pay gaps are caused by parenthood. It said women\'s earnings decrease significantly when they become parents. Men don\'t.\n\nCara believes there can be a perception that you\'re less committed because you choose to focus on your family over your career.\n\n"That perception can influence how you progress in your career, which I think men typically don\'t face in the same way," she said.',
   "Lorem #5: Aliquam suscipit mauris libero, sed hendrerit ipsum auctor.",
 ];
 
@@ -437,29 +438,26 @@ function Quiz() {
       </div>
       {/* The top “intro” bubble (always shown). Make it smaller with the new class */}
       <div className="lorem-container" style={{ marginBottom: "1rem" }}>
-        <h2>The Gender Pay Gap</h2>
+        <h2>
+          After 8 years of obligatory gender pay gap reporting by UK businesses,
+          three-quarters of included companies pay men more than women. AC, KT
+          and KE explain what creates the gap.
+        </h2>
         <p>
           The gender pay gap measures the difference in average pay between men
-          and women. The level of disparity is impacted by factors including
-          occupation, age and region.
+          and women. This can be affected by people’s age, the job they do, or
+          where they live.
         </p>
         <p>
-          One explanation forwarded for women’s lower pay is the matter of
-          preference. Women after all are free to choose their own educational
-          and career paths and therefore the disparity could be explained by a
-          tendency to, for example, choose lower-paying careers.
+          One explanation for women’s lower pay is preference. Women after all
+          are free to choose their own educational and career paths and so the
+          disparity could be explained by women’s tendency to, for example,
+          choose careers that tend to pay less.
         </p>
         <p>
-          This explanation has some capital, we can see for example that
-          lower-paying sectors such as childcare and education are
-          overwhelmingly female. But this only paints a partial picture;
-          crucially ignoring the existence of a gender pay gap within
-          occupations. Even when men and women work the same hours in the same
-          roles, nearly two-thirds of the gender pay gap remains unexplained.
-        </p>
-        <p>
-          This issue therefore requires a deeper look at the societal and
-          economic forces which underpin it.
+          We can see for example that lower-paying sectors such as childcare and
+          education are overwhelmingly female. But this doesn’t explain most of
+          the difference in what men and women are paid.
         </p>
       </div>
 
@@ -558,6 +556,23 @@ function Quiz() {
                           <p>{parts[1]}</p>
                         </>
                       );
+                    }
+                    if (text.includes("%%GRAPH_IMG%%")) {
+                      const parts = text.split("%%GRAPH_IMG%%");
+                      return parts.map((part, idx) => (
+                        <React.Fragment key={idx}>
+                          <p>{part}</p>
+                          {idx === 0 && (
+                            <div className="hero-image-container">
+                              <img
+                                src={graphImg}
+                                alt="Graph showing companies paying men more"
+                                className="hero-image"
+                              />
+                            </div>
+                          )}
+                        </React.Fragment>
+                      ));
                     }
 
                     return <p>{text}</p>;
