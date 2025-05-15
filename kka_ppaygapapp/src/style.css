@@ -539,3 +539,15 @@ footer {
   border-radius: 12px; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+/* this is a fix for the mobileview for the match up game after the logic chnaged it stopped working */
+@media (max-width: 768px) {
+  .click-match-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .match-card {
+    width: 90%; 
+  }
+}
