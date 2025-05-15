@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./style.css";
 import genImage from "./DigInvImg/home.png";
-
+import equalImage from "./DigInvImg/Equal.png";
+import motherImage from "./DigInvImg/mother.png";
 
 const quizData = [
   {
@@ -61,9 +62,9 @@ const references = {
 
 const questionLorems = [
   "Crucially, the gender pay gap increases over time; widening gradually but significantly from an individual’s late 20s and early 30s. Men’s wages tend to continue growing rapidly at this point in the life cycle (particularly for the highly educated), while women's wages plateau.\n\nOn average, every month working women take home £631 less than men - that’s £7,572 over the course of a year. This means that on average women ‘stop earning’ on November 20th every year – from which date they effectively work for free compared to their male counterparts.\n\nAccording to the Young Women’s Trust, about one fifth of the gender pay gap can be accounted for by differing jobs and sectors. By contrast, around two thirds of the income gap occurs because women are paid less even when working in similar jobs and sectors and having similar characteristics.",
-  "The Equal Pay Act was introduced in the UK in 1970, based on the 1963 Act of the same name in the United States. It enshrined the right to equal pay for equal work between men and women and significantly reduced the institutional barriers to pay equality.\n\nCrucial, equal pay is a related but unidentical concept to the Gender Pay Gap.\n\nThis allowed individuals to bring claims not only when their employer pays them less than men for doing the same or similar work, but also when they are in a role that is equally demanding in terms of effort, skill or responsibility.\n\nIt forms a crucial part of the legislative history of progress towards equal pay.\n\n1944: The Education Act was introduced reading that no women were to be removed from employment as a teacher by reasons of marriage. It took 27 years for the marriage bar to fully take effect as married women were not allowed to work as teachers until in 1919 the ‘Sex Disqualification Removal Act’ was introduced.\n\n1968: A group of around 187 female sewing machinists at the Ford Motor Company’s Dagenham factory striked for equal pay. Their work stitching car seat covers was classified as “unskilled” and they were consequently paid 15% less than their male counterparts. The Labour Employment Minister Barbara Castle intervened on their behalf to negotiate a settlement.\n\n%%WOMEN_IMG%%\n\n1970: Castle introduced the Equal Pay Bill into the House of Commons. However, it was another nine years until 1984 when the sewing machinists at Ford would receive equal pay and earn the same grade as their male colleagues.\n\n1975: It was by Barbara Castle that the Sex Discrimination Act as well as the Equal Pay Act were introduced in 1975, around the same time that the Equal Opportunities Commission (EOC) was established to tackle the issue of sex discrimination, helping future cases with Employment Tribunals and the courts.\n\nDirection of legislative action today\n\nDespite previous legislation, the Gender Pay Gap remains. According to PwC, based on the rate of progress between 2011 and 2023 it would take 29 years to close the gender pay gap in the UK. There is thus pressure on the political parties to take action to close the gap. However, different parties display different levels of commitment.",
+  "The Equal Pay Act was introduced in the UK in 1970, based on the 1963 Act of the same name in the United States. It enshrined the right to equal pay for equal work between men and women and significantly reduced the institutional barriers to pay equality.\n\nCrucial, equal pay is a related but unidentical concept to the Gender Pay Gap.\n\nThis allowed individuals to bring claims not only when their employer pays them less than men for doing the same or similar work, but also when they are in a role that is equally demanding in terms of effort, skill or responsibility.\n\nIt forms a crucial part of the legislative history of progress towards equal pay.\n\n1944: The Education Act was introduced reading that no women were to be removed from employment as a teacher by reasons of marriage. It took 27 years for the marriage bar to fully take effect as married women were not allowed to work as teachers until in 1919 the ‘Sex Disqualification Removal Act’ was introduced.\n\n1968: A group of around 187 female sewing machinists at the Ford Motor Company’s Dagenham factory striked for equal pay. Their work stitching car seat covers was classified as “unskilled” and they were consequently paid 15% less than their male counterparts. The Labour Employment Minister Barbara Castle intervened on their behalf to negotiate a settlement.\n\n%%EQUAL_IMG%%\n\n1970: Castle introduced the Equal Pay Bill into the House of Commons. However, it was another nine years until 1984 when the sewing machinists at Ford would receive equal pay and earn the same grade as their male colleagues.\n\n1975: It was by Barbara Castle that the Sex Discrimination Act as well as the Equal Pay Act were introduced in 1975, around the same time that the Equal Opportunities Commission (EOC) was established to tackle the issue of sex discrimination, helping future cases with Employment Tribunals and the courts.\n\nDirection of legislative action today\n\nDespite previous legislation, the Gender Pay Gap remains. According to PwC, based on the rate of progress between 2011 and 2023 it would take 29 years to close the gender pay gap in the UK. There is thus pressure on the political parties to take action to close the gap. However, different parties display different levels of commitment.",
   "Since 2017, the UK government has required all employers with 250 or more employees to disclose their gender pay gap on an annual basis.\n\nThere's a stark difference between the median hourly percent at private and public companies included in the compulsory reporting figures. Private: 5.2, public: 14.3\n\nHowever, despite eight years of compulsory reporting, the gender pay gap has only shown narrow improvements year on year. Co-Executive Director Priya from the campaign group Equality Trust points out that “evidence has shown that mandatory pay gap reporting in and of itself has not proved to be effective in reducing the gaps.”\n\n“Both of those gaps [CEO and gender pay] have been increasing, even among companies who report so reporting hasn't brought about the change we'd want to see.”\n\nThe Equality Trust now campaigns “for mandatory action plans and for the regulators - in this case the EHRC, to have more resource and powers to enforce compliance and deal with non-compliance.”",
-  "Cara (not her real name)...\n\n(Interviewee did not want to be named)\n\n“I was always aware of the gender pay gap, but being pregnant made it personal.” says an associate architectural designer. Becoming a parent is something she has always wanted; however, she has always worked hard for her career - earning a degree in architectural designing and landing a job at an international company in the design and consulting industry. The architect is about to give birth to her first newborn and had to give up a big project, harming her career progression in the architectural industry.\n\nThe “motherhood penalty” is the impact of the disadvantages women face in the workplace when they become mothers. The long hours spent at work are viewed by employers as a sign of commitment and reliability. But taking maternity leave can impact one’s career by “being seen as less reliable.”\n\nA study was released highlighting the impact of the “motherhood penalty” by comparing the hourly earnings between mothers and fathers. It showed that mothers earn on average 24% less per hour than fathers, which is £4.44 per hour.\n\nSome jobs in the UK offer maternity leave benefits but may affect other sources of income such as bonuses. “I have to consider how being off the project might impact my eligibility for project-based bonuses,” said the associate designer.\n\nAn analysis by the Institute for Fiscal Studies (IFS) found that most of the gender pay gaps are caused by parenthood. It found that while the average earnings of men are not affected by parenthood, women’s earnings decrease significantly when they become parents.\n\nThere’s a perception in certain workplaces where you’re seen as less committed because you choose to focus on your family over your career. The associate architectural designer said, “That perception can influence how you progress in your career, which I think men typically don’t face in the same way.”\n\nThe associate designer expresses her concerns for a major project that she was leading before she got pregnant. Architecture is project-driven and requires long hours and consistent involvement - and when there is time taken off it feels as though “your career is put on hold.” Those who take maternity leave often return to find they’ve been passed over for key projects or leadership roles, which, although not intentional, happens because the ongoing project must carry on. “Once you’re back it’s like reestablishing your place within the team and we have to compensate.”\n\nThe architect designer says that changes are needed to see a pay and career progression for women. Some of these changes would be to have more transparency in how bonuses and pay rises are calculated after maternity leave or to create ways to accommodate career breaks without penalising women. These sorts of changes can help make a difference.",
+  "Cara (not her real name)...\n\n(Interviewee did not want to be named)\n\n“I was always aware of the gender pay gap, but being pregnant made it personal.” says an associate architectural designer. Becoming a parent is something she has always wanted; however, she has always worked hard for her career - earning a degree in architectural designing and landing a job at an international company in the design and consulting industry. The architect is about to give birth to her first newborn and had to give up a big project, harming her career progression in the architectural industry.\n\n%%MOTHER_IMG%%\n\nThe “motherhood penalty” is the impact of the disadvantages women face in the workplace when they become mothers. The long hours spent at work are viewed by employers as a sign of commitment and reliability. But taking maternity leave can impact one’s career by “being seen as less reliable.”\n\nA study was released highlighting the impact of the “motherhood penalty” by comparing the hourly earnings between mothers and fathers. It showed that mothers earn on average 24% less per hour than fathers, which is £4.44 per hour.\n\nSome jobs in the UK offer maternity leave benefits but may affect other sources of income such as bonuses. “I have to consider how being off the project might impact my eligibility for project-based bonuses,” said the associate designer.\n\nAn analysis by the Institute for Fiscal Studies (IFS) found that most of the gender pay gaps are caused by parenthood. It found that while the average earnings of men are not affected by parenthood, women’s earnings decrease significantly when they become parents.\n\nThere’s a perception in certain workplaces where you’re seen as less committed because you choose to focus on your family over your career. The associate architectural designer said, “That perception can influence how you progress in your career, which I think men typically don’t face in the same way.”\n\nThe associate designer expresses her concerns for a major project that she was leading before she got pregnant. Architecture is project-driven and requires long hours and consistent involvement - and when there is time taken off it feels as though “your career is put on hold.” Those who take maternity leave often return to find they’ve been passed over for key projects or leadership roles, which, although not intentional, happens because the ongoing project must carry on. “Once you’re back it’s like reestablishing your place within the team and we have to compensate.”\n\nThe architect designer says that changes are needed to see a pay and career progression for women. Some of these changes would be to have more transparency in how bonuses and pay rises are calculated after maternity leave or to create ways to accommodate career breaks without penalising women. These sorts of changes can help make a difference.",
   "Lorem #5: Aliquam suscipit mauris libero, sed hendrerit ipsum auctor.",
 ];
 
@@ -97,7 +98,6 @@ function Quiz() {
   const [matchedJobs, setMatchedJobs] = useState({});
   const [jobColors, setJobColors] = useState({});
   const [gapColors, setGapColors] = useState({});
- 
 
   const colorMap = {
     Next: "#FFC1CC",
@@ -133,7 +133,7 @@ function Quiz() {
           }
         }
         isCorrect = allCorrect;
-               // ─── NEW: recolour each pair green (correct) or red (incorrect) ───
+        // ─── NEW: recolour each pair green (correct) or red (incorrect) ───
         const newJobColours = {};
         const newGapColours = {};
         question.data.pairs.forEach(({ job, correct }) => {
@@ -146,9 +146,8 @@ function Quiz() {
             if (user) newGapColours[user] = "red";
           }
         });
-        setJobColors(prev => ({ ...prev, ...newJobColours }));
-        setGapColors(prev => ({ ...prev, ...newGapColours }));
-        
+        setJobColors((prev) => ({ ...prev, ...newJobColours }));
+        setGapColors((prev) => ({ ...prev, ...newGapColours }));
       }
 
       // Update overall score if correct
@@ -156,7 +155,7 @@ function Quiz() {
         setScore((prev) => prev + 1);
       }
       setScored((prev) => ({ ...prev, [questionId]: true }));
-      setCorrectnessMap(prev => ({ ...prev, [questionId]: isCorrect }));
+      setCorrectnessMap((prev) => ({ ...prev, [questionId]: isCorrect }));
     }
 
     // After revealing answer for question i, show the next question i+1:
@@ -166,35 +165,33 @@ function Quiz() {
 
   // --------------------- MATCHING LOGIC ----------------------------
   const handleJobClick = (job) => {
-       if (matchedJobs[job]) return;
-   setSelectedJob(job);
- 
+    if (matchedJobs[job]) return;
+    setSelectedJob(job);
   };
 
   const handleGapClick = (gap) => {
-       if (!selectedJob) {
-     // if no job chosen yet, ignore or flash
-     return;
-   }
-   if (Object.values(matchedJobs).includes(gap)) return;
+    if (!selectedJob) {
+      // if no job chosen yet, ignore or flash
+      return;
+    }
+    if (Object.values(matchedJobs).includes(gap)) return;
 
+    // now match them visually:
+    const color =
+      Object.values(jobColors).length % 4 === 0
+        ? colorMap.Next
+        : Object.values(jobColors).length === 1
+        ? colorMap.HSBC
+        : Object.values(jobColors).length === 2
+        ? colorMap.NHS
+        : colorMap.Lidl;
 
-   // now match them visually:
-   const color = Object.values(jobColors).length % 4 === 0
-     ? colorMap.Next
-     : Object.values(jobColors).length === 1
-       ? colorMap.HSBC
-       : Object.values(jobColors).length === 2
-         ? colorMap.NHS
-         : colorMap.Lidl;
+    setMatchedJobs((prev) => ({ ...prev, [selectedJob]: gap }));
+    setJobColors((prev) => ({ ...prev, [selectedJob]: color }));
+    setGapColors((prev) => ({ ...prev, [gap]: color }));
 
-   setMatchedJobs(prev => ({ ...prev, [selectedJob]: gap }));
-   setJobColors(prev => ({ ...prev, [selectedJob]: color }));
-   setGapColors(prev => ({ ...prev, [gap]: color }));
-
-   // reset selections
-   setSelectedJob(null);
-  
+    // reset selections
+    setSelectedJob(null);
   };
 
   // -------------- RENDER THE QUESTION INTERACTION -----------------
@@ -315,7 +312,7 @@ function Quiz() {
                 <h4>Companies</h4>
                 {jobList.map((job) => {
                   const alreadyMatched = matchedJobs[job];
-                 
+
                   const bgColor = jobColors[job] || "";
                   return (
                     <div
@@ -408,17 +405,20 @@ function Quiz() {
               <p>correct answers: </p>
               <ul>
                 {question.data.pairs.map((pair, idx) => {
-            const userGap     = matchedJobs[pair.job]      || "No match";
-            const isPairCorrect = userGap === pair.correct;
-            return (
-              <li key={idx}>
-                {pair.job}: You chose {userGap}. Correct is {pair.correct}.
-                {isPairCorrect
-                  ? <span className="correct-badge"> ✓</span>
-                  : <span className="incorrect-badge"> ✗</span>}
-              </li>
-            );
-          })}
+                  const userGap = matchedJobs[pair.job] || "No match";
+                  const isPairCorrect = userGap === pair.correct;
+                  return (
+                    <li key={idx}>
+                      {pair.job}: You chose {userGap}. Correct is {pair.correct}
+                      .
+                      {isPairCorrect ? (
+                        <span className="correct-badge"> ✓</span>
+                      ) : (
+                        <span className="incorrect-badge"> ✗</span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           );
@@ -431,9 +431,6 @@ function Quiz() {
 
   // --------------------- MAIN RENDER -------------------------------
   return (
-
-    
-
     <div className="wrapper">
       <div className="hero-image-container">
         <img src={genImage} alt="Pay Gap Banner" className="hero-image" />
@@ -528,15 +525,41 @@ function Quiz() {
                   {(() => {
                     const text =
                       questionLorems[i] || "Lorem ipsum placeholder text...";
-                    if (text.includes("%%WOMEN_IMG%%")) {
-                      const parts = text.split("%%WOMEN_IMG%%");
-                      return parts.map((part, idx) => (
-                        <React.Fragment key={idx}>
-                          <p>{part}</p>
-                    
-                        </React.Fragment>
-                      ));
+
+                    if (text.includes("%%EQUAL_IMG%%")) {
+                      const parts = text.split("%%EQUAL_IMG%%");
+                      return (
+                        <>
+                          <p>{parts[0]}</p>
+                          <div className="hero-image-container">
+                            <img
+                              src={equalImage}
+                              alt="Equal Pay Act"
+                              className="hero-image"
+                            />
+                          </div>
+                          <p>{parts[1]}</p>
+                        </>
+                      );
                     }
+
+                    if (text.includes("%%MOTHER_IMG%%")) {
+                      const parts = text.split("%%MOTHER_IMG%%");
+                      return (
+                        <>
+                          <p>{parts[0]}</p>
+                          <div className="hero-image-container">
+                            <img
+                              src={motherImage}
+                              alt="Pregnant woman illustration"
+                              className="hero-image"
+                            />
+                          </div>
+                          <p>{parts[1]}</p>
+                        </>
+                      );
+                    }
+
                     return <p>{text}</p>;
                   })()}
                 </div>
@@ -563,9 +586,9 @@ function Quiz() {
         </div>
       )}
 
-      <footer><p>
-            The images on this page were made with the use of generative AI 
-          </p></footer>
+      <footer>
+        <p>The images on this page were made with the use of generative AI</p>
+      </footer>
     </div>
   );
 }

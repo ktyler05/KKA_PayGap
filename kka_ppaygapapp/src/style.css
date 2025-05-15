@@ -530,15 +530,22 @@ footer {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
 .hero-image {
-  width: 40%;          
+  width: 30%;          
   max-width: 1200px;   
   border-radius: 12px; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
+
+@media (max-width: 768px) {
+  .hero-image {
+    width: 80%;
+  }
+}
+
 /* this is a fix for the mobileview for the match up game after the logic chnaged it stopped working */
 @media (max-width: 768px) {
   .click-match-container {
