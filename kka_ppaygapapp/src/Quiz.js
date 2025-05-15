@@ -94,11 +94,10 @@ function Quiz() {
 
   // ------------------ MATCHING QUESTION HOOKS ----------------------
   const [selectedJob, setSelectedJob] = useState(null);
-  const [selectedGap,   setSelectedGap]   = useState(null); 
   const [matchedJobs, setMatchedJobs] = useState({});
   const [jobColors, setJobColors] = useState({});
   const [gapColors, setGapColors] = useState({});
-  const [flashRed, setFlashRed] = useState({});
+ 
 
   const colorMap = {
     Next: "#FFC1CC",
@@ -169,8 +168,7 @@ function Quiz() {
   const handleJobClick = (job) => {
        if (matchedJobs[job]) return;
    setSelectedJob(job);
-   // reset gap selection so a user can re-pick their answer
-   setSelectedGap(null);
+ 
   };
 
   const handleGapClick = (gap) => {
@@ -180,8 +178,6 @@ function Quiz() {
    }
    if (Object.values(matchedJobs).includes(gap)) return;
 
-   // record this gap selection
-   setSelectedGap(gap);
 
    // now match them visually:
    const color = Object.values(jobColors).length % 4 === 0
@@ -198,7 +194,7 @@ function Quiz() {
 
    // reset selections
    setSelectedJob(null);
-   setSelectedGap(null);
+  
   };
 
   // -------------- RENDER THE QUESTION INTERACTION -----------------
@@ -319,14 +315,12 @@ function Quiz() {
                 <h4>Companies</h4>
                 {jobList.map((job) => {
                   const alreadyMatched = matchedJobs[job];
-                  const flashingRed = flashRed[job];
+                 
                   const bgColor = jobColors[job] || "";
                   return (
                     <div
                       key={job}
-                      className={`match-card ${alreadyMatched ? "dim" : ""} ${
-                        flashingRed ? "flash-red" : ""
-                      }`}
+                      className={`match-card ${alreadyMatched ? "dim" : ""}`}
                       style={{ backgroundColor: bgColor }}
                       onClick={() => {
                         if (!showAnswer[question.id]) handleJobClick(job);
@@ -341,14 +335,11 @@ function Quiz() {
                 <h4>Pay Gaps</h4>
                 {gapList.map((gap) => {
                   const alreadyUsed = Object.values(matchedJobs).includes(gap);
-                  const flashingRed = flashRed[gap];
                   const bgColor = gapColors[gap] || "";
                   return (
                     <div
                       key={gap}
-                      className={`match-card ${alreadyUsed ? "dim" : ""} ${
-                        flashingRed ? "flash-red" : ""
-                      }`}
+                      className={`match-card ${alreadyUsed ? "dim" : ""}`}
                       style={{ backgroundColor: bgColor }}
                       onClick={() => {
                         if (!showAnswer[question.id]) handleGapClick(gap);
