@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./style.css";
-import womenImage from "./DigInvImg/women.png";
 import genImage from "./DigInvImg/home.png";
 
 
@@ -54,6 +53,7 @@ const quizData = [
 ];
 
 const references = {
+  2: "https://www.legislation.gov.uk/ukpga/1970/41/enacted",
   4: "https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/bulletins/genderpaygapintheuk/2024",
   1: "https://www.ciphr.com/infographics/gender-pay-gap-statistics-2024",
   5: "https://www.theguardian.com/world/2024/mar/08/uk-mothers-earned-444-less-an-hour-than-fathers-in-2023-finds-analysis",
@@ -88,12 +88,13 @@ function Quiz() {
   const [score, setScore] = useState(0);
 
   // Indicate correctness of the most recently scored question
-  const [currentIsCorrect, setCurrentIsCorrect] = useState(null);
+  const [correctnessMap, setCorrectnessMap] = useState({});
 
   const [visibleUpTo, setVisibleUpTo] = useState(1);
 
   // ------------------ MATCHING QUESTION HOOKS ----------------------
   const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedGap,   setSelectedGap]   = useState(null); 
   const [matchedJobs, setMatchedJobs] = useState({});
   const [jobColors, setJobColors] = useState({});
   const [gapColors, setGapColors] = useState({});
@@ -133,6 +134,22 @@ function Quiz() {
           }
         }
         isCorrect = allCorrect;
+               // ─── NEW: recolour each pair green (correct) or red (incorrect) ───
+        const newJobColours = {};
+        const newGapColours = {};
+        question.data.pairs.forEach(({ job, correct }) => {
+          const user = matchedJobs[job] || null;
+          if (user === correct) {
+            newJobColours[job] = "green";
+            newGapColours[correct] = "green";
+          } else {
+            newJobColours[job] = "red";
+            if (user) newGapColours[user] = "red";
+          }
+        });
+        setJobColors(prev => ({ ...prev, ...newJobColours }));
+        setGapColors(prev => ({ ...prev, ...newGapColours }));
+        
       }
 
       // Update overall score if correct
@@ -140,7 +157,7 @@ function Quiz() {
         setScore((prev) => prev + 1);
       }
       setScored((prev) => ({ ...prev, [questionId]: true }));
-      setCurrentIsCorrect(isCorrect);
+      setCorrectnessMap(prev => ({ ...prev, [questionId]: isCorrect }));
     }
 
     // After revealing answer for question i, show the next question i+1:
@@ -150,36 +167,38 @@ function Quiz() {
 
   // --------------------- MATCHING LOGIC ----------------------------
   const handleJobClick = (job) => {
-    if (matchedJobs[job]) return; // already matched
-    setSelectedJob(job);
+       if (matchedJobs[job]) return;
+   setSelectedJob(job);
+   // reset gap selection so a user can re-pick their answer
+   setSelectedGap(null);
   };
 
   const handleGapClick = (gap) => {
-    if (Object.values(matchedJobs).includes(gap)) return; // gap used
-    if (!selectedJob) return; // no job selected
+       if (!selectedJob) {
+     // if no job chosen yet, ignore or flash
+     return;
+   }
+   if (Object.values(matchedJobs).includes(gap)) return;
 
-    const correctGap = quizData
-      .find((q) => q.id === 4)
-      .data.pairs.find((p) => p.job === selectedJob)?.correct;
+   // record this gap selection
+   setSelectedGap(gap);
 
-    if (correctGap === gap) {
-      // correct match
-      setMatchedJobs((prev) => ({ ...prev, [selectedJob]: gap }));
-      const color = colorMap[selectedJob] || "green";
-      setJobColors((prev) => ({ ...prev, [selectedJob]: color }));
-      setGapColors((prev) => ({ ...prev, [gap]: color }));
-    } else {
-      // flash red
-      setFlashRed((prev) => ({ ...prev, [selectedJob]: true, [gap]: true }));
-      setTimeout(() => {
-        setFlashRed((prev) => ({
-          ...prev,
-          [selectedJob]: false,
-          [gap]: false,
-        }));
-      }, 1000);
-    }
-    setSelectedJob(null);
+   // now match them visually:
+   const color = Object.values(jobColors).length % 4 === 0
+     ? colorMap.Next
+     : Object.values(jobColors).length === 1
+       ? colorMap.HSBC
+       : Object.values(jobColors).length === 2
+         ? colorMap.NHS
+         : colorMap.Lidl;
+
+   setMatchedJobs(prev => ({ ...prev, [selectedJob]: gap }));
+   setJobColors(prev => ({ ...prev, [selectedJob]: color }));
+   setGapColors(prev => ({ ...prev, [gap]: color }));
+
+   // reset selections
+   setSelectedJob(null);
+   setSelectedGap(null);
   };
 
   // -------------- RENDER THE QUESTION INTERACTION -----------------
@@ -351,12 +370,13 @@ function Quiz() {
 
   // -------------------- RENDER ANSWER FEEDBACK ---------------------
   const renderAnswerFeedback = (question) => {
-    const feedbackClass = !currentIsCorrect ? "incorrect-feedback" : "";
+    const isCorrect = correctnessMap[question.id];
+    const feedbackClass = !isCorrect ? "incorrect-feedback" : "";
     switch (question.question_type) {
       case "slider_year":
       case "slider_pence":
       case "slider_percent":
-        if (currentIsCorrect) {
+        if (isCorrect) {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
@@ -383,7 +403,7 @@ function Quiz() {
         }
 
       case "matching":
-        if (currentIsCorrect) {
+        if (correctnessMap[question.id]) {
           return (
             <div className={`answer-feedback ${feedbackClass}`}>
               <p>
@@ -397,20 +417,17 @@ function Quiz() {
               <p>correct answers: </p>
               <ul>
                 {question.data.pairs.map((pair, idx) => {
-                  const userGap = matchedJobs[pair.job] || "No match";
-                  const isCorrect = userGap === pair.correct;
-                  return (
-                    <li key={idx}>
-                      {pair.job}: Your Match: {userGap} | Correct:{" "}
-                      {pair.correct}{" "}
-                      {isCorrect ? (
-                        <span className="correct-badge">✓</span>
-                      ) : (
-                        <span className="incorrect-badge">✗</span>
-                      )}
-                    </li>
-                  );
-                })}
+            const userGap     = matchedJobs[pair.job]      || "No match";
+            const isPairCorrect = userGap === pair.correct;
+            return (
+              <li key={idx}>
+                {pair.job}: You chose {userGap}. Correct is {pair.correct}.
+                {isPairCorrect
+                  ? <span className="correct-badge"> ✓</span>
+                  : <span className="incorrect-badge"> ✗</span>}
+              </li>
+            );
+          })}
               </ul>
             </div>
           );
@@ -525,18 +542,6 @@ function Quiz() {
                       return parts.map((part, idx) => (
                         <React.Fragment key={idx}>
                           <p>{part}</p>
-                          {idx < parts.length - 1 && (
-                            <div style={{ textAlign: "center" }}>
-                              <img
-                                src={womenImage}
-                                alt="Women"
-                                style={{
-                                  maxWidth: "100%",
-                                  margin: "1rem auto",
-                                }}
-                              />
-                            </div>
-                          )}
                     
                         </React.Fragment>
                       ));
@@ -567,7 +572,9 @@ function Quiz() {
         </div>
       )}
 
-      <footer></footer>
+      <footer><p>
+            The images on this page were made with the use of generative AI 
+          </p></footer>
     </div>
   );
 }
